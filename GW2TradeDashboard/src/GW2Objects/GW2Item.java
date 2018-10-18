@@ -10,8 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import gw2tradedashboard.SqliteDriver;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 /**
  *
@@ -29,15 +31,22 @@ public class GW2Item {
     private String iconPath;
     private Boolean accountBound = false;
     private Boolean noSell = false;
-    private Integer charges = 0;
 
-    public void GW2Item(String id) throws URISyntaxException, IOException {
+    public GW2Item(String id) throws URISyntaxException, IOException {
         this.id = id;
         Gson gson = new Gson();
         GW2ApiConnector.getInstance();
         JsonObject obj = GW2ApiConnector.getItem(id);
-        name = obj.get("name").getAsString();
-        description = obj.get("description").getAsString();
+        try {
+            name = obj.get("name").getAsString();
+        } catch (Exception e) {
+            name = "Unknown";
+        }
+        try {
+            description = obj.get("description").getAsString();
+        } catch (Exception e) {
+            description = "";
+        }
         type = obj.get("type").getAsString();
         level = obj.get("level").getAsString();
         rarity = obj.get("rarity").getAsString();
@@ -49,10 +58,13 @@ public class GW2Item {
                 case "NoSell":
                     noSell = true;
                     break;
-                case "SoulBindOnUse":
-                    break;
             }
         }
+
+    }
+
+    public void saveToDatabase() throws SQLException {
+        SqliteDriver.saveItem(this);
     }
 
     public String getName() {
@@ -95,7 +107,15 @@ public class GW2Item {
         return noSell;
     }
 
-    public Integer getCharges() {
-        return charges;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNoSell(Boolean noSell) {
+        this.noSell = noSell;
     }
 }

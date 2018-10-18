@@ -5,6 +5,8 @@
  */
 package apiConnector;
 
+import GW2Objects.GW2InvItem;
+import GW2Objects.GW2Item;
 import GW2Objects.GW2Price;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +22,8 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -63,6 +67,7 @@ public class GW2ApiConnector {
             StatusLine statusLine = hr.getStatusLine();
             HttpEntity entity = hr.getEntity();
             if (statusLine.getStatusCode() >= 300) {
+                System.out.println("Error: " + statusLine.getStatusCode());
                 throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
             }
             if (entity == null) {
@@ -71,7 +76,7 @@ public class GW2ApiConnector {
             Gson gson = new GsonBuilder().create();
             ContentType contentType = ContentType.getOrDefault(entity);
             Charset charset = contentType.getCharset();
-            Reader reader = new InputStreamReader(entity.getContent(), charset);            
+            Reader reader = new InputStreamReader(entity.getContent(), charset);
             return gson.fromJson(reader, JsonObject.class);
         };
 
@@ -99,16 +104,52 @@ public class GW2ApiConnector {
         return GW2ApiConnector.instance;
     }
 
-    public static JsonObject getCharacterInventory(String characterName) throws URISyntaxException, IOException {
+    public static List<GW2InvItem> getCharacterInventory(String characterName) throws URISyntaxException, IOException {
         String path = String.format("/v2/characters/%s/inventory", characterName);
+        List<GW2InvItem> results = new ArrayList<>();
         HttpGet httpGet = GW2ApiConnector.buildURI(path, true);
-        return httpClient.execute(httpGet, respObj);
+        JsonObject obj = httpClient.execute(httpGet, respObj);
+        JsonArray bags = obj.getAsJsonArray("bags");
+        for (JsonElement elem : bags) {
+            JsonArray inventory = null;
+            try {
+                inventory = elem.getAsJsonObject().getAsJsonArray("inventory");
+            } catch (Exception e) {
+
+            }
+            if (inventory != null) {
+                for (JsonElement invElem : inventory) {
+                    try {
+                        String itemId = invElem.getAsJsonObject().get("id").getAsString();
+                        Integer charges = 0;
+                        try {
+                            charges = invElem.getAsJsonObject().get("charges").getAsInt();
+                        } catch (Exception e) {
+                            charges = 0;
+                        }
+                        Integer count = invElem.getAsJsonObject().get("count").getAsInt();
+                        GW2InvItem item = new GW2InvItem(itemId, count, charges);
+                        results.add(item);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        }
+        return results;
     }
 
-    public static JsonArray getCharacters() throws IOException, URISyntaxException {
+    public static List<String> getCharacters() throws IOException, URISyntaxException {
         HttpGet httpGet = GW2ApiConnector.buildURI("/v2/characters", true);
         System.out.println(httpGet.getURI());
-        return httpClient.execute(httpGet, respArray);
+        JsonArray arr = httpClient.execute(httpGet, respArray);
+        List<String> results = new ArrayList<>();
+        if (arr != null) {
+            for (JsonElement elem : arr) {
+                results.add(elem.getAsString());
+            }
+        }
+        return results;
     }
 
     public static HttpGet buildURI(String path, Boolean token) throws URISyntaxException {
@@ -130,7 +171,7 @@ public class GW2ApiConnector {
         return new HttpGet(uri);
     }
 
-    private static ArrayList<String> getAllItems() throws URISyntaxException, IOException {
+    public static ArrayList<String> getAllItems() throws URISyntaxException, IOException {
         ArrayList<String> result = new ArrayList<>();
         HttpGet httpGet = buildURI("/v2/items", false);
         JsonArray jArray = httpClient.execute(httpGet, respArray);
@@ -140,28 +181,13 @@ public class GW2ApiConnector {
         return result;
     }
 
-    /**
-     *
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws SQLException
-     */
-    public static void reloadItemDB() throws URISyntaxException, IOException, ClassNotFoundException, SQLException {
-        ArrayList<String> items = getAllItems();
-        SqliteDatabase db = new SqliteDatabase(dbFile, true);
-        for (String id : items) {
-
-        }
-    }
-    
-    public static JsonObject getItem(String itemId) throws URISyntaxException, IOException{
+    public static JsonObject getItem(String itemId) throws URISyntaxException, IOException {
         HttpGet httpGet = buildURI("/v2/items/".concat(itemId), false);
         JsonObject itemObj = httpClient.execute(httpGet, respObj);
         return itemObj;
     }
-    
-    public static JsonObject getPrice(String itemId) throws URISyntaxException, IOException{
+
+    public static JsonObject getPrice(String itemId) throws URISyntaxException, IOException {
         HttpGet httpGet = buildURI("/v2/commerce/prices/".concat(itemId), true);
         JsonObject priceObj = httpClient.execute(httpGet, respObj);
         return priceObj;
@@ -176,17 +202,17 @@ public class GW2ApiConnector {
         } catch (Exception e) {
             arr = httpClient.execute(httpGet, respArray);
         }
-        if (obj == null){
+        if (obj == null) {
             obj = arr.getAsJsonObject();
         }
         return obj;
     }
-    
-    public static GW2Price formatPrice(Integer price){
-       Integer gold = Math.floorDiv(price, 10000);
-       Integer tmp = price % 10000;
-       Integer silver = Math.floorDiv(tmp, 100);
-       Integer copper = tmp % 100;
-       return new GW2Price(gold, silver, copper);
+
+    public static GW2Price formatPrice(Integer price) {
+        Integer gold = Math.floorDiv(price, 10000);
+        Integer tmp = price % 10000;
+        Integer silver = Math.floorDiv(tmp, 100);
+        Integer copper = tmp % 100;
+        return new GW2Price(gold, silver, copper);
     }
 }

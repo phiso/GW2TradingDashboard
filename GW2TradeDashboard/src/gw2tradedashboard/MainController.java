@@ -5,16 +5,19 @@
  */
 package gw2tradedashboard;
 
+import GW2Objects.GW2Account;
 import GW2Objects.GW2Price;
 import apiConnector.GW2ApiConnector;
 import apiConnector.GW2ApiPriceListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +27,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -35,8 +40,6 @@ import javafx.scene.control.TextField;
  */
 public class MainController implements Initializable {
 
-    @FXML
-    private Button relaodItemsButton;
     @FXML
     private Label buyingValueLabel;
     @FXML
@@ -51,6 +54,10 @@ public class MainController implements Initializable {
     private TextArea itemArea;
     @FXML
     private Button stopMonitoringButton;
+    @FXML
+    private ComboBox<String> characterComboBox;
+
+    private GW2Account account;
 
     /**
      * Initializes the controller class.
@@ -63,16 +70,19 @@ public class MainController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
         GW2PMM.getInstance();
+        try {
+            SqliteDriver.getInstance(System.getProperty("user.dir").concat("\\data\\data.db"));
+        } catch (ClassNotFoundException | SQLException | FileNotFoundException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public void initAfter() {
-
-    }
-
-    public void handleReloadItemsButton(ActionEvent event) {
         try {
-            GW2ApiConnector.reloadItemDB();
-        } catch (URISyntaxException | IOException | ClassNotFoundException | SQLException ex) {
+            account = new GW2Account();
+            characterComboBox.getItems().setAll(account.getCharacters());
+        } catch (URISyntaxException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -112,8 +122,12 @@ public class MainController implements Initializable {
             }
         }
     }
-    
-    public void handleStopMonitoringButton(ActionEvent event){
-        
+
+    public void handleCharacterCombobox(ActionEvent event) {
+
+    }
+
+    public void handleStopMonitoringButton(ActionEvent event) {
+
     }
 }
