@@ -68,7 +68,7 @@ public class GW2ApiConnector {
             HttpEntity entity = hr.getEntity();
             if (statusLine.getStatusCode() >= 300) {
                 System.out.println("Error: " + statusLine.getStatusCode());
-                throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+                //throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
             }
             if (entity == null) {
                 throw new ClientProtocolException("Response contains no Content!");

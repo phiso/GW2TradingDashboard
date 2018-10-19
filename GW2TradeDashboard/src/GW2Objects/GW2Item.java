@@ -62,6 +62,22 @@ public class GW2Item {
         }
 
     }
+    
+    public Integer getTradingSellPrice() throws URISyntaxException, IOException{
+        JsonObject obj = GW2ApiConnector.getPrice(id);        
+        if (obj != null){
+            return obj.getAsJsonObject("sells").get("unit_price").getAsInt();            
+        }
+        return -1;
+    }
+    
+    public Integer getTradingBuyPrice() throws URISyntaxException, IOException{
+        JsonObject obj = GW2ApiConnector.getPrice(id);        
+        if (obj != null){
+            return obj.getAsJsonObject("buys").get("unit_price").getAsInt();            
+        }
+        return -1;
+    }
 
     public void saveToDatabase() throws SQLException {
         SqliteDriver.saveItem(this);

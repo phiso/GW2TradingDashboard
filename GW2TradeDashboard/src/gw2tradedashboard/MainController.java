@@ -6,6 +6,8 @@
 package gw2tradedashboard;
 
 import GW2Objects.GW2Account;
+import GW2Objects.GW2InvItem;
+import GW2Objects.GW2Inventory;
 import GW2Objects.GW2Price;
 import apiConnector.GW2ApiConnector;
 import apiConnector.GW2ApiPriceListener;
@@ -22,16 +24,30 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -56,6 +72,14 @@ public class MainController implements Initializable {
     private Button stopMonitoringButton;
     @FXML
     private ComboBox<String> characterComboBox;
+    @FXML
+    private AnchorPane inventoryTab;
+    @FXML
+    private TitledPane inventoryPane;
+    @FXML
+    private VBox itemsVBox;
+    @FXML
+    private Button clearInventoryButton;
 
     private GW2Account account;
 
@@ -75,7 +99,7 @@ public class MainController implements Initializable {
         } catch (ClassNotFoundException | SQLException | FileNotFoundException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        MainControllerWrapper.getInstance(this);
     }
 
     public void initAfter() {
@@ -85,6 +109,43 @@ public class MainController implements Initializable {
         } catch (URISyntaxException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        characterComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            GW2Inventory inventory;
+            Platform.runLater(() -> {
+                inventoryPane.setText(newValue);
+                LoadInventoryThread t = new LoadInventoryThread(newValue);
+                t.start();               
+            });
+        });
+    }
+    
+    public void fillInventory(GW2Inventory inventory) throws IOException{
+        for (GW2InvItem item : inventory.getAllitems()){
+            Platform.runLater(() -> {
+                try {
+                    loaditemFXML(item);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });            
+        }
+    }
+    
+    private void clearInventory(){
+        itemsVBox.getChildren().clear();
+    }
+
+    public void loaditemFXML(GW2InvItem item) throws IOException {
+        URL location = getClass().getResource("ItemInfo.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(location);
+        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+        Parent root = fxmlLoader.load(location.openStream());
+        ItemInfoController controller = fxmlLoader.getController();
+        controller.setItem(item);
+        itemsVBox.getChildren().add(root);
+        itemsVBox.getChildren().add(new Separator(Orientation.HORIZONTAL));
     }
 
     public void handleMonitoringButton(ActionEvent event) {
@@ -129,5 +190,9 @@ public class MainController implements Initializable {
 
     public void handleStopMonitoringButton(ActionEvent event) {
 
+    }
+    
+    public void handleClearInventoryButton(ActionEvent event){
+        clearInventory();
     }
 }

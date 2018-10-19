@@ -28,4 +28,8 @@ public class GW2Inventory {
     public GW2InvItem getItem(int index){
         return items.get(index);
     }
+    
+    public List<GW2InvItem> getAllitems(){
+        return items;
+    }
 }

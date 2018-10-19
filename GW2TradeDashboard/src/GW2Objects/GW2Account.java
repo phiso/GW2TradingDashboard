@@ -24,9 +24,9 @@ public class GW2Account {
         GW2ApiConnector.getInstance();
         characterNames = GW2ApiConnector.getCharacters();
         inventories = new HashMap<>();
-        for (String name : characterNames) {
+        /*for (String name : characterNames) {
             inventories.put(name, new GW2Inventory(name));
-        }
+        }*/
     }
     
     public GW2Inventory getInventory(String name){
