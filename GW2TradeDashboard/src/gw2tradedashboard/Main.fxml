@@ -22,13 +22,13 @@
                      <children>
                         <Label layoutX="14.0" layoutY="26.0" text="Characters" />
                         <ComboBox fx:id="characterComboBox" layoutX="14.0" layoutY="44.0" onAction="#handleCharacterCombobox" prefHeight="25.0" prefWidth="331.0" />
-                        <TitledPane fx:id="inventoryPane" animated="false" layoutX="14.0" layoutY="78.0" prefHeight="757.0" prefWidth="708.0" text="untitled">
+                        <TitledPane fx:id="inventoryPane" animated="false" layoutX="14.0" layoutY="78.0" prefHeight="757.0" prefWidth="939.0" text="untitled">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <ScrollPane hbarPolicy="NEVER" prefHeight="731.3333333333334" prefWidth="462.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <content>
-                                          <VBox fx:id="itemsVBox" prefHeight="700.0" prefWidth="681.0" />
+                                          <VBox fx:id="itemsVBox" prefHeight="700.0" prefWidth="914.0" />
                                        </content>
                                     </ScrollPane>
                                  </children>

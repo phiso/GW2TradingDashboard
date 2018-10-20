@@ -3,26 +3,36 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="67.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gw2tradedashboard.ItemInfoController">
+<AnchorPane id="AnchorPane" prefHeight="67.0" prefWidth="715.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gw2tradedashboard.ItemInfoController">
    <children>
       <ImageView fx:id="itemImage" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
       <Separator layoutX="61.0" orientation="VERTICAL" prefHeight="64.0" />
-      <Label fx:id="itemNameLabel" layoutX="71.0" layoutY="5.0" prefHeight="17.0" prefWidth="285.0" text="Item Name here" />
+      <Label fx:id="itemNameLabel" layoutX="71.0" layoutY="5.0" prefHeight="17.0" prefWidth="240.0" text="Item Name here" />
       <Label fx:id="countLabel" layoutX="64.0" layoutY="50.0" text="00" />
-      <Label fx:id="itemInfoLabel" layoutX="71.0" layoutY="25.0" prefHeight="17.0" prefWidth="306.0" text="Additional Information" />
-      <Label layoutX="405.0" layoutY="7.0" text="Buying" />
-      <Label fx:id="buyCostLabel" layoutX="450.0" layoutY="7.0" text="000G 00S 00C" />
-      <Label layoutX="405.0" layoutY="25.0" text="Selling" />
-      <Label fx:id="sellValueLabel" layoutX="450.0" layoutY="25.0" text="000G 00S 00C" />
-      <Label layoutX="405.0" layoutY="43.0" text="Profit" />
-      <Label fx:id="profitLabel" layoutX="450.0" layoutY="43.0" text="000G 00S 00C" />
-      <Separator layoutX="381.0" orientation="VERTICAL" prefHeight="64.0" />
-      <Pane fx:id="overlayPane" blendMode="OVERLAY" layoutY="2.0" onMouseClicked="#handleOverlayPaneClick" prefHeight="64.0" prefWidth="615.0" />
-      <CheckBox fx:id="monitorCheckBox" alignment="CENTER" blendMode="MULTIPLY" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="359.0" layoutY="7.0" mnemonicParsing="false" onAction="#hanleMonitorCheckBox" />
+      <Label fx:id="itemInfoLabel" layoutX="71.0" layoutY="25.0" prefHeight="17.0" prefWidth="255.0" text="Additional Information" />
+      <Label layoutX="582.0" layoutY="7.0" text="Buying" />
+      <Label fx:id="buyCostLabel" layoutX="627.0" layoutY="7.0" text="000G 00S 00C" />
+      <Label layoutX="582.0" layoutY="25.0" text="Selling" />
+      <Label fx:id="sellValueLabel" layoutX="627.0" layoutY="25.0" text="000G 00S 00C" />
+      <Label layoutX="582.0" layoutY="43.0" text="Profit" />
+      <Label fx:id="profitLabel" layoutX="627.0" layoutY="43.0" text="000G 00S 00C" />
+      <Separator layoutX="353.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
+      <Pane fx:id="overlayPane" blendMode="OVERLAY" layoutY="2.0" onMouseClicked="#handleOverlayPaneClick" prefHeight="64.0" prefWidth="715.0" />
       <Label fx:id="chargesLabel" layoutX="87.0" layoutY="50.0" text="00" />
+      <Separator layoutX="577.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
+      <CheckBox fx:id="monitorCheckBox" alignment="CENTER" blendMode="MULTIPLY" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="331.0" layoutY="6.0" mnemonicParsing="false" onAction="#hanleMonitorCheckBox" />
+      <Spinner fx:id="goldSpinner" editable="true" layoutX="364.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
+      <Spinner fx:id="silverSpinner" editable="true" layoutX="437.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
+      <Spinner fx:id="copperSpinner" editable="true" layoutX="512.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
+      <Spinner fx:id="amountSpinner" editable="true" layoutX="512.0" layoutY="4.0" prefHeight="25.0" prefWidth="64.0" />
+      <Label layoutX="468.0" layoutY="8.0" text="Amount" />
+      <Label layoutX="504.0" layoutY="39.0" text="C" />
+      <Label layoutX="430.0" layoutY="39.0" text="S" />
+      <Label layoutX="355.0" layoutY="39.0" text="G" />
    </children>
 </AnchorPane>

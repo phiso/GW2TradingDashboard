@@ -31,6 +31,8 @@ public class GW2Item {
     private String iconPath;
     private Boolean accountBound = false;
     private Boolean noSell = false;
+    private Integer sellPrice = 0;
+    private Integer buyPrice = 0;
 
     public GW2Item(String id) throws URISyntaxException, IOException {
         this.id = id;
@@ -62,21 +64,29 @@ public class GW2Item {
         }
 
     }
-    
-    public Integer getTradingSellPrice() throws URISyntaxException, IOException{
-        JsonObject obj = GW2ApiConnector.getPrice(id);        
-        if (obj != null){
-            return obj.getAsJsonObject("sells").get("unit_price").getAsInt();            
+
+    public Integer getTradingSellPrice() throws URISyntaxException, IOException {
+        JsonObject obj = GW2ApiConnector.getPrice(id);
+        Integer price = 0;
+        if (obj != null) {
+            try {
+                price = obj.getAsJsonObject("sells").get("unit_price").getAsInt();
+            } catch (Exception e) {
+            }
         }
-        return -1;
+        return price;
     }
-    
-    public Integer getTradingBuyPrice() throws URISyntaxException, IOException{
-        JsonObject obj = GW2ApiConnector.getPrice(id);        
-        if (obj != null){
-            return obj.getAsJsonObject("buys").get("unit_price").getAsInt();            
+
+    public Integer getTradingBuyPrice() throws URISyntaxException, IOException {
+        JsonObject obj = GW2ApiConnector.getPrice(id);
+        Integer price = 0;
+        if (obj != null) {
+            try {
+                price = obj.getAsJsonObject("buys").get("unit_price").getAsInt();
+            } catch (Exception e) {
+            }
         }
-        return -1;
+        return price;
     }
 
     public void saveToDatabase() throws SQLException {
@@ -133,5 +143,33 @@ public class GW2Item {
 
     public void setNoSell(Boolean noSell) {
         this.noSell = noSell;
+    }
+
+    /**
+     * @return the sellPrice
+     */
+    public Integer getSellPrice() {
+        return sellPrice;
+    }
+
+    /**
+     * @param sellPrice the sellPrice to set
+     */
+    public void setSellPrice(Integer sellPrice) {
+        this.sellPrice = sellPrice;
+    }
+
+    /**
+     * @return the buyPrice
+     */
+    public Integer getBuyPrice() {
+        return buyPrice;
+    }
+
+    /**
+     * @param buyPrice the buyPrice to set
+     */
+    public void setBuyPrice(Integer buyPrice) {
+        this.buyPrice = buyPrice;
     }
 }

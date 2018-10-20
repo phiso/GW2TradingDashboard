@@ -19,12 +19,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,22 +30,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -125,7 +117,7 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 try {
                     loaditemFXML(item);
-                } catch (IOException ex) {
+                } catch (IOException | URISyntaxException ex) {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });            
@@ -136,7 +128,7 @@ public class MainController implements Initializable {
         itemsVBox.getChildren().clear();
     }
 
-    public void loaditemFXML(GW2InvItem item) throws IOException {
+    public void loaditemFXML(GW2InvItem item) throws IOException, URISyntaxException {
         URL location = getClass().getResource("ItemInfo.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
@@ -151,15 +143,15 @@ public class MainController implements Initializable {
     public void handleMonitoringButton(ActionEvent event) {
         String itemId = monitoringIdField.getText();
         GW2ApiPriceListener priceListener = new GW2ApiPriceListener(itemId);
-        priceListener.getBuyPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            GW2Price price = GW2ApiConnector.formatPrice((Integer) newValue);
+        priceListener.buyPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            GW2Price price = new GW2Price((Integer) newValue);
             Platform.runLater(() -> {
                 buyingValueLabel.setText(price.toString());
             });
             System.out.println(price.toString());
         });
-        priceListener.getSellPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            GW2Price price = GW2ApiConnector.formatPrice((Integer) newValue);
+        priceListener.sellPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            GW2Price price = new GW2Price((Integer) newValue);
             Platform.runLater(() -> {
                 sellingValueLabel.setText(price.toString());
             });

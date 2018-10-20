@@ -7,7 +7,6 @@ package gw2tradedashboard;
 
 import GW2Objects.GW2InvItem;
 import GW2Objects.GW2Price;
-import apiConnector.GW2ApiConnector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -17,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -49,6 +49,14 @@ public class ItemInfoController implements Initializable {
     private ImageView itemImage;
     @FXML
     private Label chargesLabel;
+    @FXML
+    private Spinner<Integer> amountSpinner;
+    @FXML
+    private Spinner<Integer> goldSpinner;
+    @FXML
+    private Spinner<Integer> silverSpinner;
+    @FXML
+    private Spinner<Integer> copperSpinner;
     
     private GW2InvItem item;
 
@@ -62,9 +70,10 @@ public class ItemInfoController implements Initializable {
 
     public void hanleMonitorCheckBox(ActionEvent event) {
         if (monitorCheckBox.isSelected()) {
-
+            item.setDisplayLabels(sellValueLabel, buyCostLabel);
+            item.startMonitoring(5000);
         } else {
-
+            item.stopMonitoring();
         }
     }
 
@@ -79,8 +88,8 @@ public class ItemInfoController implements Initializable {
         countLabel.setText(Integer.toString(item.getCount()));
         chargesLabel.setText(item.getCharges() == 0 ? "" : Integer.toString(item.getCharges()));
         itemImage.setImage(new Image(item.getIconPath()));
-        GW2Price buying = GW2ApiConnector.formatPrice(item.getTradingBuyPrice());
-        GW2Price selling = GW2ApiConnector.formatPrice(item.getTradingSellPrice());
+        GW2Price buying = new GW2Price(item.getTradingBuyPrice());
+        GW2Price selling = new GW2Price(item.getTradingSellPrice());
         sellValueLabel.setText(selling.toString());
         buyCostLabel.setText(buying.toString());
     }

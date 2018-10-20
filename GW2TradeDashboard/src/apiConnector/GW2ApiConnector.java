@@ -6,7 +6,6 @@
 package apiConnector;
 
 import GW2Objects.GW2InvItem;
-import GW2Objects.GW2Item;
 import GW2Objects.GW2Price;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,13 +19,10 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
@@ -208,11 +204,7 @@ public class GW2ApiConnector {
         return obj;
     }
 
-    public static GW2Price formatPrice(Integer price) {
-        Integer gold = Math.floorDiv(price, 10000);
-        Integer tmp = price % 10000;
-        Integer silver = Math.floorDiv(tmp, 100);
-        Integer copper = tmp % 100;
-        return new GW2Price(gold, silver, copper);
-    }
+    /*public static GW2Price formatPrice(Integer price) {        
+        return new GW2Price(price);
+    }*/
 }

@@ -16,67 +16,94 @@ import javafx.beans.property.SimpleIntegerProperty;
  *
  * @author Philipp
  */
-public class GW2ApiPriceListener extends Thread {    
+public class GW2ApiPriceListener extends Thread {
 
     private SimpleIntegerProperty sellPriceProperty;
     private SimpleIntegerProperty buyPriceProperty;
-    private String itemId;
+    private final String itemId;
     private Boolean continuos;
     private SimpleIntegerProperty aliveCounter;
-    
-    public GW2ApiPriceListener(String itemId){
+    private Integer delay;
+
+    public GW2ApiPriceListener(String itemId, int delay) {
         super();
         aliveCounter = new SimpleIntegerProperty(0);
         this.itemId = itemId;
         sellPriceProperty = new SimpleIntegerProperty(0);
         buyPriceProperty = new SimpleIntegerProperty(0);
         continuos = true;
+        this.delay = delay;
     }
-    
+
+    public GW2ApiPriceListener(String itemId) {
+        this(itemId, 10000);
+    }
+
     @Override
-    public void run(){
-        while(continuos){
+    public void run() {
+        System.out.println("listening... (item id: " + itemId + ")");
+        while (continuos) {
+            System.out.println("Refreshing prices on item " + itemId);
             try {
                 JsonObject obj = GW2ApiConnector.getPrice(itemId);
-                if (obj != null){
+                if (obj != null) {
                     Integer buyPrice = obj.getAsJsonObject("buys").get("unit_price").getAsInt();
                     Integer sellPrice = obj.getAsJsonObject("sells").get("unit_price").getAsInt();
                     sellPriceProperty.set(sellPrice);
                     buyPriceProperty.set(buyPrice);
-                    aliveCounter.set(aliveCounter.get()+1);
-                    Thread.sleep(10000);
+                    aliveCounter.set(aliveCounter.get() + 1);
+                    Thread.sleep(getDelay());
                 }
             } catch (URISyntaxException | IOException | InterruptedException ex) {
                 Logger.getLogger(GW2ApiPriceListener.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }
-    
-    public SimpleIntegerProperty getSellPriceProperty(){
+
+    public SimpleIntegerProperty sellPriceProperty() {
         return sellPriceProperty;
     }
-    
-    public SimpleIntegerProperty getBuyPriceProperty(){
+
+    public SimpleIntegerProperty buyPriceProperty() {
         return buyPriceProperty;
     }
-    
-    public Integer getSellPrice(){
+
+    public Integer getSellPrice() {
         return sellPriceProperty.get();
     }
-    
-    public Integer getBuyPrice(){
+
+    public Integer getBuyPrice() {
         return buyPriceProperty.get();
     }
-    
-    public SimpleIntegerProperty getAliveCounterProperty(){
+
+    public SimpleIntegerProperty getAliveCounterProperty() {
         return aliveCounter;
     }
-    
-    public void stopThread(){
+
+    public void stopThread() {
         continuos = false;
     }
-    public String getItemId(){
+        
+    public void resumeThread(){
+        continuos = true;
+    }
+
+    public String getItemId() {
         return itemId;
+    }
+
+    /**
+     * @return the delay
+     */
+    public Integer getDelay() {
+        return delay;
+    }
+
+    /**
+     * @param delay the delay to set
+     */
+    public void setDelay(Integer delay) {
+        this.delay = delay;
     }
 }
