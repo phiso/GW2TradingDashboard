@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="891.0" prefWidth="965.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gw2tradedashboard.MainController">
+   <children>
+      <TabPane prefHeight="693.0" prefWidth="1186.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Character">
+            <content>
+              <AnchorPane fx:id="inventoryTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="26.0" text="Characters" />
+                        <ComboBox fx:id="characterComboBox" layoutX="14.0" layoutY="44.0" onAction="#handleCharacterCombobox" prefHeight="25.0" prefWidth="331.0" />
+                        <TitledPane fx:id="inventoryPane" animated="false" layoutX="14.0" layoutY="78.0" prefHeight="757.0" prefWidth="708.0" text="untitled">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <ScrollPane hbarPolicy="NEVER" prefHeight="731.3333333333334" prefWidth="462.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <VBox fx:id="itemsVBox" prefHeight="700.0" prefWidth="681.0" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <Button fx:id="clearInventoryButton" layoutX="363.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleClearInventoryButton" prefHeight="25.0" prefWidth="114.0" text="Clear Inventory" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Items">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="monitoringButton" layoutX="216.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleMonitoringButton" text="Start Monitoring" />
+                        <TextField fx:id="monitoringIdField" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="74.0" />
+                        <Label layoutX="14.0" layoutY="14.0" text="Item ID" />
+                        <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="72.0" text="Monitoring">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="14.0" text="Selling" />
+                                    <Label layoutX="13.0" layoutY="55.0" text="Buying" />
+                                    <Label fx:id="sellingValueLabel" layoutX="59.0" layoutY="14.0" text="Label" />
+                                    <Label fx:id="buyingValueLabel" layoutX="59.0" layoutY="55.0" text="Label" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TextArea fx:id="itemArea" layoutX="227.0" layoutY="72.0" prefHeight="375.0" prefWidth="583.0" />
+                        <Button fx:id="loadItemButton" layoutX="115.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleLoadItemButton" text="Load Item" />
+                        <Button fx:id="stopMonitoringButton" layoutX="332.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleStopMonitoringButton" text="Stop Monitoring" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
