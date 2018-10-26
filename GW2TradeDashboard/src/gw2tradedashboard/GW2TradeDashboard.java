@@ -36,6 +36,7 @@ public class GW2TradeDashboard extends Application {
         controller.initAfter();
         primaryStage.show();
     }
+    
 
     /**
      * @param args the command line arguments

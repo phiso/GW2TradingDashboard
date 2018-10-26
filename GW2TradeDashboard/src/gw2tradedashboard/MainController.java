@@ -51,17 +51,7 @@ public class MainController implements Initializable {
     @FXML
     private Label buyingValueLabel;
     @FXML
-    private Label sellingValueLabel;
-    @FXML
-    private Button monitoringButton;
-    @FXML
-    private TextField monitoringIdField;
-    @FXML
-    private Button loadItemButton;
-    @FXML
-    private TextArea itemArea;
-    @FXML
-    private Button stopMonitoringButton;
+    private Label sellingValueLabel;   
     @FXML
     private ComboBox<String> characterComboBox;
     @FXML
@@ -140,49 +130,9 @@ public class MainController implements Initializable {
         itemsVBox.getChildren().add(new Separator(Orientation.HORIZONTAL));
     }
 
-    public void handleMonitoringButton(ActionEvent event) {
-        String itemId = monitoringIdField.getText();
-        GW2ApiPriceListener priceListener = new GW2ApiPriceListener(itemId);
-        priceListener.buyPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            GW2Price price = new GW2Price((Integer) newValue);
-            Platform.runLater(() -> {
-                buyingValueLabel.setText(price.toString());
-            });
-            System.out.println(price.toString());
-        });
-        priceListener.sellPriceProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            GW2Price price = new GW2Price((Integer) newValue);
-            Platform.runLater(() -> {
-                sellingValueLabel.setText(price.toString());
-            });
-            System.out.println(price.toString());
-        });
-        priceListener.getAliveCounterProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
-        });
-        priceListener.start();
-    }
-
-    public void handleLoadItemButton(ActionEvent event) {
-        String itemId = monitoringIdField.getText();
-        if (!itemId.equals("")) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            try {
-                JsonObject obj = GW2ApiConnector.getItem(itemId);
-                itemArea.setText(gson.toJson(obj));
-            } catch (URISyntaxException | IOException ex) {
-                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     public void handleCharacterCombobox(ActionEvent event) {
 
-    }
-
-    public void handleStopMonitoringButton(ActionEvent event) {
-
-    }
+    }    
     
     public void handleClearInventoryButton(ActionEvent event){
         clearInventory();

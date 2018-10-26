@@ -14,9 +14,11 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,7 +30,7 @@ import javafx.scene.layout.Pane;
  * @author Philipp
  */
 public class ItemInfoController implements Initializable {
-
+    
     @FXML
     private Label itemNameLabel;
     @FXML
@@ -57,6 +59,8 @@ public class ItemInfoController implements Initializable {
     private Spinner<Integer> silverSpinner;
     @FXML
     private Spinner<Integer> copperSpinner;
+    @FXML
+    private Button diagramButton;
     
     private GW2InvItem item;
 
@@ -65,9 +69,31 @@ public class ItemInfoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        SpinnerValueFactory<Integer> amountValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 1);
+        SpinnerValueFactory<Integer> goldValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0);
+        SpinnerValueFactory<Integer> silverValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0);
+        SpinnerValueFactory<Integer> copperValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0);
+        
+        amountSpinner.setValueFactory(amountValueFactory);
+        goldSpinner.setValueFactory(goldValueFactory);
+        silverSpinner.setValueFactory(silverValueFactory);
+        copperSpinner.setValueFactory(copperValueFactory);
+        
+        copperSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == 100) {
+                copperSpinner.getValueFactory().setValue(0);
+                silverSpinner.getValueFactory().setValue(silverSpinner.getValue() + 1);
+            }
+        });
+        
+        silverSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == 100) {                
+                silverSpinner.getValueFactory().setValue(0);
+                goldSpinner.getValueFactory().setValue(goldSpinner.getValue() + 1);
+            }
+        });
     }
-
+    
     public void hanleMonitorCheckBox(ActionEvent event) {
         if (monitorCheckBox.isSelected()) {
             item.setDisplayLabels(sellValueLabel, buyCostLabel);
@@ -76,15 +102,15 @@ public class ItemInfoController implements Initializable {
             item.stopMonitoring();
         }
     }
-
+    
     public void handleOverlayPaneClick(MouseEvent event) {
         System.out.println("TEST");
     }
     
-    public void setItem(GW2InvItem item) throws URISyntaxException, IOException{
+    public void setItem(GW2InvItem item) throws URISyntaxException, IOException {
         this.item = item;
-        itemNameLabel.setText(item.getName() + " ("+item.getId()+")");
-        itemInfoLabel.setText(item.getRarity()+", lvl"+item.getLevel());
+        itemNameLabel.setText(item.getName() + " (" + item.getId() + ")");
+        itemInfoLabel.setText(item.getRarity() + ", lvl" + item.getLevel());
         countLabel.setText(Integer.toString(item.getCount()));
         chargesLabel.setText(item.getCharges() == 0 ? "" : Integer.toString(item.getCharges()));
         itemImage.setImage(new Image(item.getIconPath()));
@@ -93,5 +119,9 @@ public class ItemInfoController implements Initializable {
         sellValueLabel.setText(selling.toString());
         buyCostLabel.setText(buying.toString());
     }
-
+    
+    public void handleDiagramButton(ActionEvent event) {
+        
+    }
+    
 }

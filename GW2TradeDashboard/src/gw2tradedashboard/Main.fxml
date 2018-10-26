@@ -4,9 +4,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -42,29 +42,21 @@
           </Tab>
           <Tab text="Items">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="monitoringButton" layoutX="216.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleMonitoringButton" text="Start Monitoring" />
-                        <TextField fx:id="monitoringIdField" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="74.0" />
-                        <Label layoutX="14.0" layoutY="14.0" text="Item ID" />
-                        <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="72.0" text="Monitoring">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <Label layoutX="14.0" layoutY="14.0" text="Selling" />
-                                    <Label layoutX="13.0" layoutY="55.0" text="Buying" />
-                                    <Label fx:id="sellingValueLabel" layoutX="59.0" layoutY="14.0" text="Label" />
-                                    <Label fx:id="buyingValueLabel" layoutX="59.0" layoutY="55.0" text="Label" />
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                        <TextArea fx:id="itemArea" layoutX="227.0" layoutY="72.0" prefHeight="375.0" prefWidth="583.0" />
-                        <Button fx:id="loadItemButton" layoutX="115.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleLoadItemButton" text="Load Item" />
-                        <Button fx:id="stopMonitoringButton" layoutX="332.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleStopMonitoringButton" text="Stop Monitoring" />
-                     </children></AnchorPane>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
+            <Tab text="Settings">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="14.0" text="Api Key" />
+                        <TextField layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="626.0" />
+                        <Spinner editable="true" layoutX="12.0" layoutY="84.0" prefHeight="25.0" prefWidth="115.0" />
+                        <Label layoutX="12.0" layoutY="67.0" text="Refresh rate (ms)" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
