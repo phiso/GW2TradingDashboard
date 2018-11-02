@@ -5,7 +5,6 @@
  */
 package apiConnector;
 
-import GW2Objects.GW2Item;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;

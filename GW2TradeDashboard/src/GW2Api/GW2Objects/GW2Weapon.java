@@ -30,8 +30,8 @@ public class GW2Weapon extends GW2Item {
     private Integer suffixItemId;
     private Integer secondarySuffixItemId;
 
-    public GW2Weapon(String itemId) throws ClientProtocolException, IOException, URISyntaxException {
-        super(itemId);
+    public GW2Weapon(JsonObject srcObject) throws ClientProtocolException, IOException, URISyntaxException {
+        super(srcObject);
         infusionSlots = new ArrayList<>();
         attributes = new ArrayList<>();
         parseJson();

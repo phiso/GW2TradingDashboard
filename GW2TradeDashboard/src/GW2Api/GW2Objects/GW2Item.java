@@ -28,44 +28,41 @@ public class GW2Item {
     private List<String> flags;
     private List<String> gameTypes;
     private List<String> restrictions;
-    private final Integer id;
+    private Integer id;
     private String iconUrl;
     private Integer vendorValue;
     private JsonObject details;
-    private final JsonObject srcObject;
+    private JsonObject srcObject;
 
-    private final GW2Api api;
-
-    public GW2Item(String itemId) throws ClientProtocolException, IOException, URISyntaxException {
-        this.id = Integer.parseInt(itemId);
-        api = new GW2Api();
-        srcObject = api.getItem(itemId);
+    public GW2Item(JsonObject srcObject) throws ClientProtocolException, IOException, URISyntaxException {
+        this.srcObject = srcObject;
         flags = new ArrayList<>();
         gameTypes = new ArrayList<>();
         restrictions = new ArrayList<>();
-        parseJson(srcObject);
+        parseJson();
     }
 
-    private void parseJson(JsonObject object) {
-        name = object.get("name").getAsString();
-        type = object.get("type").getAsString();
-        level = object.get("level").getAsInt();
-        rarity = object.get("rarity").getAsString();
-        JsonArray jFlags = object.getAsJsonArray("flags");
+    private void parseJson() {
+        id = srcObject.get("id").getAsInt();
+        name = srcObject.get("name").getAsString();
+        type = srcObject.get("type").getAsString();
+        level = srcObject.get("level").getAsInt();
+        rarity = srcObject.get("rarity").getAsString();
+        JsonArray jFlags = srcObject.getAsJsonArray("flags");
         for (JsonElement elem : jFlags) {
             flags.add(elem.getAsString());
         }
-        JsonArray jGameTypes = object.getAsJsonArray("game_types");
+        JsonArray jGameTypes = srcObject.getAsJsonArray("game_types");
         for (JsonElement elem : jGameTypes) {
             gameTypes.add(elem.getAsString());
         }
-        JsonArray jRestrictions = object.getAsJsonArray("restrictions");
+        JsonArray jRestrictions = srcObject.getAsJsonArray("restrictions");
         for (JsonElement elem : jRestrictions) {
             restrictions.add(elem.getAsString());
         }
-        iconUrl = object.get("icon").getAsString();
-        vendorValue = object.get("vendor_value").getAsInt();
-        details = object.getAsJsonObject("details");
+        iconUrl = srcObject.get("icon").getAsString();
+        vendorValue = srcObject.get("vendor_value").getAsInt();
+        details = srcObject.getAsJsonObject("details");
     }
 
     public String getName() {
@@ -118,6 +115,5 @@ public class GW2Item {
     public JsonObject getSrcObject() {
         return srcObject;
     }
-    
-    
+
 }

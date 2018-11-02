@@ -5,8 +5,7 @@
  */
 package gw2tradedashboard;
 
-import GW2Objects.GW2InvItem;
-import GW2Objects.GW2Price;
+import GW2Api.GW2Objects.GW2InventoryItem;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -62,7 +61,7 @@ public class ItemInfoController implements Initializable {
     @FXML
     private Button diagramButton;
     
-    private GW2InvItem item;
+    private GW2InventoryItem item;
 
     /**
      * Initializes the controller class.
@@ -95,29 +94,15 @@ public class ItemInfoController implements Initializable {
     }
     
     public void hanleMonitorCheckBox(ActionEvent event) {
-        if (monitorCheckBox.isSelected()) {
-            item.setDisplayLabels(sellValueLabel, buyCostLabel);
-            item.startMonitoring(5000);
-        } else {
-            item.stopMonitoring();
-        }
+      
     }
     
     public void handleOverlayPaneClick(MouseEvent event) {
-        System.out.println("TEST");
+       
     }
     
-    public void setItem(GW2InvItem item) throws URISyntaxException, IOException {
-        this.item = item;
-        itemNameLabel.setText(item.getName() + " (" + item.getId() + ")");
-        itemInfoLabel.setText(item.getRarity() + ", lvl" + item.getLevel());
-        countLabel.setText(Integer.toString(item.getCount()));
-        chargesLabel.setText(item.getCharges() == 0 ? "" : Integer.toString(item.getCharges()));
-        itemImage.setImage(new Image(item.getIconPath()));
-        GW2Price buying = new GW2Price(item.getTradingBuyPrice());
-        GW2Price selling = new GW2Price(item.getTradingSellPrice());
-        sellValueLabel.setText(selling.toString());
-        buyCostLabel.setText(buying.toString());
+    public void setItem(GW2InventoryItem item) throws URISyntaxException, IOException {
+       
     }
     
     public void handleDiagramButton(ActionEvent event) {

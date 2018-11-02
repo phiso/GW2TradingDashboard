@@ -28,8 +28,8 @@ public class GW2UpgradeComponent extends GW2Item{
     private String suffix;
     private List<GW2ItemAttribute> attributes;
     
-    public GW2UpgradeComponent(String itemId) throws ClientProtocolException, IOException, URISyntaxException {
-        super(itemId);
+    public GW2UpgradeComponent(JsonObject srcObject) throws ClientProtocolException, IOException, URISyntaxException {
+        super(srcObject);
         componentFlags = new ArrayList<>();
         infusionUpgradeFlags = new ArrayList<>();
         bonuses = new ArrayList<>();

@@ -29,8 +29,8 @@ public class GW2Armor extends GW2Item {
     private Integer defaultSkin;
     private String description;
 
-    public GW2Armor(String itemId) throws ClientProtocolException, IOException, URISyntaxException {
-        super(itemId);
+    public GW2Armor(JsonObject srcObject) throws ClientProtocolException, IOException, URISyntaxException {
+        super(srcObject);
         infusionSlots = new ArrayList<>();
         attributes = new ArrayList<>();
         parseJson();
