@@ -21,56 +21,56 @@ import javafx.beans.property.SimpleIntegerProperty;
  */
 public class RequestThread extends Thread {
 
-    private ArrayList<String> ids;
-    private SimpleBooleanProperty done;
-    private SimpleDoubleProperty progress;
-    private Integer itemCount;
-
-    public RequestThread(ArrayList<String> ids, String name) {
-        super(name);
-        this.ids = (ArrayList<String>) ids.clone();
-        done = new SimpleBooleanProperty(false);
-        progress = new SimpleDoubleProperty(0.0);
-        itemCount = ids.size();
-    }
-
-    @Override
-    public void run() {
-        int count = 0;
-        for (String id : ids) {
-            try {
-                count++;
-                GW2Item item;                
-                item = new GW2Item(id);
-                item.saveToDatabase();
-                Thread.sleep(100);                
-                progress.set((count/itemCount)*100);
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        done.set(true);
-    }
-
-    public SimpleBooleanProperty doneProperty() {
-        return done;
-    }
-
-    public Boolean isDone() {
-        return done.get();
-    }
-
-    public SimpleDoubleProperty progressProperty() {
-        return progress;
-    }
-
-    public Double getProgress() {
-        return progress.get();
-    }
+//    private ArrayList<String> ids;
+//    private SimpleBooleanProperty done;
+//    private SimpleDoubleProperty progress;
+//    private Integer itemCount;
+//
+//    public RequestThread(ArrayList<String> ids, String name) {
+//        super(name);
+//        this.ids = (ArrayList<String>) ids.clone();
+//        done = new SimpleBooleanProperty(false);
+//        progress = new SimpleDoubleProperty(0.0);
+//        itemCount = ids.size();
+//    }
+//
+//    @Override
+//    public void run() {
+//        int count = 0;
+//        for (String id : ids) {
+//            try {
+//                count++;
+//                GW2Item item;                
+//                item = new GW2Item(id);
+//                item.saveToDatabase();
+//                Thread.sleep(100);                
+//                progress.set((count/itemCount)*100);
+//            } catch (URISyntaxException ex) {
+//                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IOException ex) {
+//                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (SQLException ex) {
+//                Logger.getLogger(RequestThread.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//        done.set(true);
+//    }
+//
+//    public SimpleBooleanProperty doneProperty() {
+//        return done;
+//    }
+//
+//    public Boolean isDone() {
+//        return done.get();
+//    }
+//
+//    public SimpleDoubleProperty progressProperty() {
+//        return progress;
+//    }
+//
+//    public Double getProgress() {
+//        return progress.get();
+//    }
 }

@@ -1,0 +1,4 @@
+Nov 02, 2018 9:45:31 PM gw2tradedashboard.LogMngr <init>
+INFORMATION: Logger initialized
+Nov 02, 2018 9:45:32 PM gw2tradedashboard.LogMngr logAware
+INFORMATION: UI Loaded

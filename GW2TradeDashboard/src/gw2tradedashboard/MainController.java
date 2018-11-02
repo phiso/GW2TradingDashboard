@@ -40,7 +40,7 @@ public class MainController implements Initializable {
     @FXML
     private Label buyingValueLabel;
     @FXML
-    private Label sellingValueLabel;   
+    private Label sellingValueLabel;
     @FXML
     private ComboBox<String> characterComboBox;
     @FXML
@@ -48,32 +48,25 @@ public class MainController implements Initializable {
     @FXML
     private TitledPane inventoryPane;
     @FXML
-    private VBox itemsVBox;
-    @FXML
-    private Button clearInventoryButton;
-    
-    private GW2Api api;
+    private VBox itemsVBox;  
 
+    private GW2Api api;
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {                
+    public void initialize(URL url, ResourceBundle rb) {
         MainControllerWrapper.getInstance(this);
         try {
             api = new GW2Api();
         } catch (ClientProtocolException ex) {
-            
-        }
+            LogMngr.logError("Unable to load GW2Api.", ex);
+        }                
     }
 
     public void initAfter() {
-        
-    }       
-    
-    private void clearInventory(){
-        itemsVBox.getChildren().clear();
+
     }
 
     public void loaditemFXML(GW2InventoryItem item) throws IOException, URISyntaxException {
@@ -90,9 +83,5 @@ public class MainController implements Initializable {
 
     public void handleCharacterCombobox(ActionEvent event) {
 
-    }    
-    
-    public void handleClearInventoryButton(ActionEvent event){
-        clearInventory();
     }
 }

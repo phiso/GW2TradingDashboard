@@ -21,19 +21,26 @@ public class LogMngr {
     private static FileHandler fileHandler;
     private static Level logLevel;
     
-    private LogMngr(String name, String path) throws IOException{
+    private LogMngr(String name, String path, Level level) throws IOException{
         logger = Logger.getLogger(name);
         fileHandler = new FileHandler(path);
         logger.addHandler(fileHandler);
         SimpleFormatter formatter = new SimpleFormatter();
         fileHandler.setFormatter(formatter);
         logger.info("Logger initialized");
-        logLevel = Level.WARNING;
+        logLevel = level;
     }
     
     public static LogMngr getinstance(String name, String path) throws IOException{
         if (LogMngr.instance == null){
-            LogMngr.instance = new LogMngr(name, path);
+            LogMngr.instance = new LogMngr(name, path, Level.WARNING);
+        }
+        return LogMngr.instance;
+    }
+    
+    public static LogMngr getinstance(String name, String path, Level level) throws IOException{
+        if (LogMngr.instance == null){
+            LogMngr.instance = new LogMngr(name, path, level);
         }
         return LogMngr.instance;
     }

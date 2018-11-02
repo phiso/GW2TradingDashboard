@@ -5,8 +5,6 @@
  */
 package apiConnector;
 
-import GW2Objects.GW2InvItem;
-import GW2Objects.GW2Price;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -40,171 +38,171 @@ import org.ini4j.Ini;
  */
 public class GW2ApiConnector {
 
-    private static final String baseAddr = "api.guildwars2.com";
-    private static final String keyFile = System.getProperty("user.dir").concat("\\data\\key.ini");
-    private static final String dbFile = System.getProperty("user.dir").concat("\\data\\data.db");
-
-    private static GW2ApiConnector instance;
-    private static String apiKey = "";
-    private static CloseableHttpClient httpClient;
-    private static ResponseHandler<JsonObject> respObj;
-    private static ResponseHandler<JsonArray> respArray;
-
-    private GW2ApiConnector() throws URISyntaxException, IOException {
-        File file = new File(keyFile);
-        Ini ini = new Ini();
-        ini.load(file);
-        Ini.Section keySection = ini.get("Key");
-        String key = keySection.get("api_key");
-        GW2ApiConnector.apiKey = key;
-        GW2ApiConnector.httpClient = HttpClients.createDefault();
-
-        respObj = (HttpResponse hr) -> {
-            StatusLine statusLine = hr.getStatusLine();
-            HttpEntity entity = hr.getEntity();
-            if (statusLine.getStatusCode() >= 300) {
-                System.out.println("Error: " + statusLine.getStatusCode());
-                //throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
-            }
-            if (entity == null) {
-                throw new ClientProtocolException("Response contains no Content!");
-            }
-            Gson gson = new GsonBuilder().create();
-            ContentType contentType = ContentType.getOrDefault(entity);
-            Charset charset = contentType.getCharset();
-            Reader reader = new InputStreamReader(entity.getContent(), charset);
-            return gson.fromJson(reader, JsonObject.class);
-        };
-
-        respArray = (HttpResponse hr) -> {
-            StatusLine statusLine = hr.getStatusLine();
-            HttpEntity entity = hr.getEntity();
-            if (statusLine.getStatusCode() >= 300) {
-                throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
-            }
-            if (entity == null) {
-                throw new ClientProtocolException("Response contains no Content!");
-            }
-            Gson gson = new GsonBuilder().create();
-            ContentType contentType = ContentType.getOrDefault(entity);
-            Charset charset = contentType.getCharset();
-            Reader reader = new InputStreamReader(entity.getContent(), charset);
-            return gson.fromJson(reader, JsonArray.class);
-        };
-    }
-
-    public static GW2ApiConnector getInstance() throws URISyntaxException, IOException {
-        if (GW2ApiConnector.instance == null) {
-            GW2ApiConnector.instance = new GW2ApiConnector();
-        }
-        return GW2ApiConnector.instance;
-    }
-
-    public static List<GW2InvItem> getCharacterInventory(String characterName) throws URISyntaxException, IOException {
-        String path = String.format("/v2/characters/%s/inventory", characterName);
-        List<GW2InvItem> results = new ArrayList<>();
-        HttpGet httpGet = GW2ApiConnector.buildURI(path, true);
-        JsonObject obj = httpClient.execute(httpGet, respObj);
-        JsonArray bags = obj.getAsJsonArray("bags");
-        for (JsonElement elem : bags) {
-            JsonArray inventory = null;
-            try {
-                inventory = elem.getAsJsonObject().getAsJsonArray("inventory");
-            } catch (Exception e) {
-
-            }
-            if (inventory != null) {
-                for (JsonElement invElem : inventory) {
-                    try {
-                        String itemId = invElem.getAsJsonObject().get("id").getAsString();
-                        Integer charges = 0;
-                        try {
-                            charges = invElem.getAsJsonObject().get("charges").getAsInt();
-                        } catch (Exception e) {
-                            charges = 0;
-                        }
-                        Integer count = invElem.getAsJsonObject().get("count").getAsInt();
-                        GW2InvItem item = new GW2InvItem(itemId, count, charges);
-                        results.add(item);
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-        }
-        return results;
-    }
-
-    public static List<String> getCharacters() throws IOException, URISyntaxException {
-        HttpGet httpGet = GW2ApiConnector.buildURI("/v2/characters", true);
-        System.out.println(httpGet.getURI());
-        JsonArray arr = httpClient.execute(httpGet, respArray);
-        List<String> results = new ArrayList<>();
-        if (arr != null) {
-            for (JsonElement elem : arr) {
-                results.add(elem.getAsString());
-            }
-        }
-        return results;
-    }
-
-    public static HttpGet buildURI(String path, Boolean token) throws URISyntaxException {
-        URI uri;
-        if (!token) {
-            uri = new URIBuilder()
-                    .setScheme("https")
-                    .setHost(baseAddr)
-                    .setPath(path)
-                    .build();
-        } else {
-            uri = new URIBuilder()
-                    .setScheme("https")
-                    .setHost(baseAddr)
-                    .setPath(path)
-                    .setParameter("access_token", apiKey)
-                    .build();
-        }
-        return new HttpGet(uri);
-    }
-
-    public static ArrayList<String> getAllItems() throws URISyntaxException, IOException {
-        ArrayList<String> result = new ArrayList<>();
-        HttpGet httpGet = buildURI("/v2/items", false);
-        JsonArray jArray = httpClient.execute(httpGet, respArray);
-        for (JsonElement elem : jArray) {
-            result.add(elem.getAsString());
-        }
-        return result;
-    }
-
-    public static JsonObject getItem(String itemId) throws URISyntaxException, IOException {
-        HttpGet httpGet = buildURI("/v2/items/".concat(itemId), false);
-        JsonObject itemObj = httpClient.execute(httpGet, respObj);
-        return itemObj;
-    }
-
-    public static JsonObject getPrice(String itemId) throws URISyntaxException, IOException {
-        HttpGet httpGet = buildURI("/v2/commerce/prices/".concat(itemId), true);
-        JsonObject priceObj = httpClient.execute(httpGet, respObj);
-        return priceObj;
-    }
-
-    public static JsonObject request(String path, Boolean auth) throws URISyntaxException, IOException {
-        HttpGet httpGet = buildURI(path, auth);
-        JsonObject obj = null;
-        JsonArray arr = null;
-        try {
-            obj = httpClient.execute(httpGet, respObj);
-        } catch (Exception e) {
-            arr = httpClient.execute(httpGet, respArray);
-        }
-        if (obj == null) {
-            obj = arr.getAsJsonObject();
-        }
-        return obj;
-    }
-
-    /*public static GW2Price formatPrice(Integer price) {        
-        return new GW2Price(price);
-    }*/
+//    private static final String baseAddr = "api.guildwars2.com";
+//    private static final String keyFile = System.getProperty("user.dir").concat("\\data\\key.ini");
+//    private static final String dbFile = System.getProperty("user.dir").concat("\\data\\data.db");
+//
+//    private static GW2ApiConnector instance;
+//    private static String apiKey = "";
+//    private static CloseableHttpClient httpClient;
+//    private static ResponseHandler<JsonObject> respObj;
+//    private static ResponseHandler<JsonArray> respArray;
+//
+//    private GW2ApiConnector() throws URISyntaxException, IOException {
+//        File file = new File(keyFile);
+//        Ini ini = new Ini();
+//        ini.load(file);
+//        Ini.Section keySection = ini.get("Key");
+//        String key = keySection.get("api_key");
+//        GW2ApiConnector.apiKey = key;
+//        GW2ApiConnector.httpClient = HttpClients.createDefault();
+//
+//        respObj = (HttpResponse hr) -> {
+//            StatusLine statusLine = hr.getStatusLine();
+//            HttpEntity entity = hr.getEntity();
+//            if (statusLine.getStatusCode() >= 300) {
+//                System.out.println("Error: " + statusLine.getStatusCode());
+//                //throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+//            }
+//            if (entity == null) {
+//                throw new ClientProtocolException("Response contains no Content!");
+//            }
+//            Gson gson = new GsonBuilder().create();
+//            ContentType contentType = ContentType.getOrDefault(entity);
+//            Charset charset = contentType.getCharset();
+//            Reader reader = new InputStreamReader(entity.getContent(), charset);
+//            return gson.fromJson(reader, JsonObject.class);
+//        };
+//
+//        respArray = (HttpResponse hr) -> {
+//            StatusLine statusLine = hr.getStatusLine();
+//            HttpEntity entity = hr.getEntity();
+//            if (statusLine.getStatusCode() >= 300) {
+//                throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+//            }
+//            if (entity == null) {
+//                throw new ClientProtocolException("Response contains no Content!");
+//            }
+//            Gson gson = new GsonBuilder().create();
+//            ContentType contentType = ContentType.getOrDefault(entity);
+//            Charset charset = contentType.getCharset();
+//            Reader reader = new InputStreamReader(entity.getContent(), charset);
+//            return gson.fromJson(reader, JsonArray.class);
+//        };
+//    }
+//
+//    public static GW2ApiConnector getInstance() throws URISyntaxException, IOException {
+//        if (GW2ApiConnector.instance == null) {
+//            GW2ApiConnector.instance = new GW2ApiConnector();
+//        }
+//        return GW2ApiConnector.instance;
+//    }
+//
+//    public static List<GW2InvItem> getCharacterInventory(String characterName) throws URISyntaxException, IOException {
+//        String path = String.format("/v2/characters/%s/inventory", characterName);
+//        List<GW2InvItem> results = new ArrayList<>();
+//        HttpGet httpGet = GW2ApiConnector.buildURI(path, true);
+//        JsonObject obj = httpClient.execute(httpGet, respObj);
+//        JsonArray bags = obj.getAsJsonArray("bags");
+//        for (JsonElement elem : bags) {
+//            JsonArray inventory = null;
+//            try {
+//                inventory = elem.getAsJsonObject().getAsJsonArray("inventory");
+//            } catch (Exception e) {
+//
+//            }
+//            if (inventory != null) {
+//                for (JsonElement invElem : inventory) {
+//                    try {
+//                        String itemId = invElem.getAsJsonObject().get("id").getAsString();
+//                        Integer charges = 0;
+//                        try {
+//                            charges = invElem.getAsJsonObject().get("charges").getAsInt();
+//                        } catch (Exception e) {
+//                            charges = 0;
+//                        }
+//                        Integer count = invElem.getAsJsonObject().get("count").getAsInt();
+//                        GW2InvItem item = new GW2InvItem(itemId, count, charges);
+//                        results.add(item);
+//                    } catch (Exception e) {
+//
+//                    }
+//                }
+//            }
+//        }
+//        return results;
+//    }
+//
+//    public static List<String> getCharacters() throws IOException, URISyntaxException {
+//        HttpGet httpGet = GW2ApiConnector.buildURI("/v2/characters", true);
+//        System.out.println(httpGet.getURI());
+//        JsonArray arr = httpClient.execute(httpGet, respArray);
+//        List<String> results = new ArrayList<>();
+//        if (arr != null) {
+//            for (JsonElement elem : arr) {
+//                results.add(elem.getAsString());
+//            }
+//        }
+//        return results;
+//    }
+//
+//    public static HttpGet buildURI(String path, Boolean token) throws URISyntaxException {
+//        URI uri;
+//        if (!token) {
+//            uri = new URIBuilder()
+//                    .setScheme("https")
+//                    .setHost(baseAddr)
+//                    .setPath(path)
+//                    .build();
+//        } else {
+//            uri = new URIBuilder()
+//                    .setScheme("https")
+//                    .setHost(baseAddr)
+//                    .setPath(path)
+//                    .setParameter("access_token", apiKey)
+//                    .build();
+//        }
+//        return new HttpGet(uri);
+//    }
+//
+//    public static ArrayList<String> getAllItems() throws URISyntaxException, IOException {
+//        ArrayList<String> result = new ArrayList<>();
+//        HttpGet httpGet = buildURI("/v2/items", false);
+//        JsonArray jArray = httpClient.execute(httpGet, respArray);
+//        for (JsonElement elem : jArray) {
+//            result.add(elem.getAsString());
+//        }
+//        return result;
+//    }
+//
+//    public static JsonObject getItem(String itemId) throws URISyntaxException, IOException {
+//        HttpGet httpGet = buildURI("/v2/items/".concat(itemId), false);
+//        JsonObject itemObj = httpClient.execute(httpGet, respObj);
+//        return itemObj;
+//    }
+//
+//    public static JsonObject getPrice(String itemId) throws URISyntaxException, IOException {
+//        HttpGet httpGet = buildURI("/v2/commerce/prices/".concat(itemId), true);
+//        JsonObject priceObj = httpClient.execute(httpGet, respObj);
+//        return priceObj;
+//    }
+//
+//    public static JsonObject request(String path, Boolean auth) throws URISyntaxException, IOException {
+//        HttpGet httpGet = buildURI(path, auth);
+//        JsonObject obj = null;
+//        JsonArray arr = null;
+//        try {
+//            obj = httpClient.execute(httpGet, respObj);
+//        } catch (Exception e) {
+//            arr = httpClient.execute(httpGet, respArray);
+//        }
+//        if (obj == null) {
+//            obj = arr.getAsJsonObject();
+//        }
+//        return obj;
+//    }
+//
+//    /*public static GW2Price formatPrice(Integer price) {        
+//        return new GW2Price(price);
+//    }*/
 }

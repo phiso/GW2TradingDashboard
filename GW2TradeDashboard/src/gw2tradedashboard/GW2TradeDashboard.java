@@ -5,8 +5,10 @@
  */
 package gw2tradedashboard;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -25,6 +27,8 @@ public class GW2TradeDashboard extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        GWTSettings.getInstance(String.format("%s%sdata%sconf.ini", System.getProperty("user.dir"), File.separator, File.separator));
+        LogMngr.getinstance("GWTLogger", String.format("%s%slog%slog.txt", System.getProperty("user.dir"), File.separator, File.separator), Level.parse(GWTSettings.getSetting("LOGGING.Loglevel")));
         URL location = getClass().getResource("Main.fxml");
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
@@ -35,8 +39,8 @@ public class GW2TradeDashboard extends Application {
         controller = fxmlLoader.getController();
         controller.initAfter();
         primaryStage.show();
+        LogMngr.logInfo("UI Loaded");
     }
-    
 
     /**
      * @param args the command line arguments

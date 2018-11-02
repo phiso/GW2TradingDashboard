@@ -20,33 +20,33 @@ import org.apache.http.client.methods.HttpGet;
  */
 public class ApiItemThread extends Thread{
     
-    private SimpleBooleanProperty done;
-    private ArrayList<String> itemIds;
-    
-    public void ApiItemThread(ArrayList<String> ids){
-        done = new SimpleBooleanProperty(false);
-        itemIds = new ArrayList<>();
-        itemIds = (ArrayList<String>) ids.clone();
-    }
-    
-    @Override
-    public void run(){
-        itemIds.forEach((id) -> {
-            try {
-                JsonObject obj = GW2ApiConnector.request("/v2/items/".concat(id), false);
-                
-            } catch (URISyntaxException | IOException ex) {
-                Logger.getLogger(ApiItemThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        done.set(true);
-    }
-    
-    public SimpleBooleanProperty getDoneProperty(){
-        return done;
-    }
-    
-    public Boolean isDone(){
-        return done.get();
-    }
+//    private SimpleBooleanProperty done;
+//    private ArrayList<String> itemIds;
+//    
+//    public void ApiItemThread(ArrayList<String> ids){
+//        done = new SimpleBooleanProperty(false);
+//        itemIds = new ArrayList<>();
+//        itemIds = (ArrayList<String>) ids.clone();
+//    }
+//    
+//    @Override
+//    public void run(){
+//        itemIds.forEach((id) -> {
+//            try {
+//                JsonObject obj = GW2ApiConnector.request("/v2/items/".concat(id), false);
+//                
+//            } catch (URISyntaxException | IOException ex) {
+//                Logger.getLogger(ApiItemThread.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        });
+//        done.set(true);
+//    }
+//    
+//    public SimpleBooleanProperty getDoneProperty(){
+//        return done;
+//    }
+//    
+//    public Boolean isDone(){
+//        return done.get();
+//    }
 }
