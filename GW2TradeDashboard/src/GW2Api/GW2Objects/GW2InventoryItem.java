@@ -37,11 +37,11 @@ public class GW2InventoryItem {
     private void parseJson() {
         id = srcObject.get("id").getAsInt();
         count = srcObject.get("count").getAsInt();
-        charges = srcObject.get("charges").getAsInt();
+        charges = srcObject.get("charges") != null ? srcObject.get("charges").getAsInt() : 0;
         binding = srcObject.get("binding") != null ? srcObject.get("binding").getAsString() : "";
         skin = srcObject.get("skin") != null ? srcObject.get("skin").getAsInt() : -1;
-        if (binding != "" && binding != "Account") {
-            boundTo = srcObject.get("boundTo").getAsString();
+        if (!binding.equals("") && !binding.equals("Account")) {
+            boundTo = srcObject.get("bound_to").getAsString();
         }
         if (srcObject.get("upgrades") != null) {
             for (JsonElement elem : srcObject.getAsJsonArray("upgrades")) {

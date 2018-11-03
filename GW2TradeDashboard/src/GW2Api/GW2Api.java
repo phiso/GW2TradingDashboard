@@ -146,4 +146,8 @@ public class GW2Api {
     public JsonObject getAccountInventory() throws URISyntaxException, IOException {
         return apiRequest("/v2/account/inventory", true).getAsJsonObject();
     }
+
+    public void setApiKey(String key) {
+        apiKey = key;
+    }
 }

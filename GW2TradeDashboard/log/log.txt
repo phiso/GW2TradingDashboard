@@ -1,4 +1,22 @@
-Nov 02, 2018 9:45:31 PM gw2tradedashboard.LogMngr <init>
+Nov 03, 2018 1:27:49 AM GW2Api.LogMngr <init>
 INFORMATION: Logger initialized
-Nov 02, 2018 9:45:32 PM gw2tradedashboard.LogMngr logAware
+Nov 03, 2018 1:27:50 AM GW2Api.LogMngr logAware
+INFORMATION: GW2 Api loaded.
+Nov 03, 2018 1:27:51 AM GW2Api.LogMngr logAware
 INFORMATION: UI Loaded
+Nov 03, 2018 1:27:52 AM GW2Api.LogMngr logAware
+INFORMATION: Selected Character: Salma Wyrn
+Nov 03, 2018 1:27:55 AM GW2Api.LogMngr logAware
+INFORMATION: Loaded 38 items in Inventory.
+Nov 03, 2018 1:27:57 AM GW2Api.LogMngr logAware
+INFORMATION: Selected Character: Viktor Schwarzauge
+Nov 03, 2018 1:27:58 AM GW2Api.LogMngr logAware
+INFORMATION: Loaded 18 items in Inventory.
+Nov 03, 2018 1:28:01 AM GW2Api.LogMngr logAware
+INFORMATION: Selected Character: Lyria Ren
+Nov 03, 2018 1:28:04 AM GW2Api.LogMngr logAware
+INFORMATION: Loaded 58 items in Inventory.
+Nov 03, 2018 1:28:08 AM GW2Api.LogMngr logAware
+INFORMATION: Selected Character: Layla Green
+Nov 03, 2018 1:28:09 AM GW2Api.LogMngr logAware
+INFORMATION: Loaded 35 items in Inventory.
