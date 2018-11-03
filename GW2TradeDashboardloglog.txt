@@ -1,0 +1,6 @@
+Nov 03, 2018 9:08:53 PM GW2Api.LogMngr <init>
+INFORMATION: Logger initialized
+Nov 03, 2018 9:08:53 PM GW2Api.LogMngr logAware
+INFORMATION: GW2 Api loaded.
+Nov 03, 2018 9:08:54 PM GW2Api.LogMngr logAware
+INFORMATION: UI Loaded

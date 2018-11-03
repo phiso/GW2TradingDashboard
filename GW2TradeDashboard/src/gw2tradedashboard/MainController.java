@@ -10,11 +10,12 @@ import GW2Api.GW2Api;
 import GW2Api.GW2Objects.GW2Inventory;
 import GW2Api.GW2Objects.GW2InventoryItem;
 import GW2Api.GsonUtils;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +31,12 @@ import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -46,10 +50,6 @@ import org.apache.http.client.ClientProtocolException;
 public class MainController implements Initializable {
 
     @FXML
-    private Label buyingValueLabel;
-    @FXML
-    private Label sellingValueLabel;
-    @FXML
     private ComboBox<String> characterComboBox;
     @FXML
     private AnchorPane inventoryTab;
@@ -61,10 +61,23 @@ public class MainController implements Initializable {
     private Button refreshIventoryButton;
     @FXML
     private ProgressIndicator progressIndicator;
+    @FXML
+    private Button saveSettingsButton;
+    @FXML
+    private Button selectLogFileButton;
+    @FXML
+    private Spinner<Integer> refreshRateSpinner;
+    @FXML
+    private TextField apiKeyField;
+    @FXML
+    private TextField logFileField;
+    @FXML
+    private ComboBox<String> loglevelCombobox;
 
     private GW2Api api;
     private Boolean inventoryLoaded = false;
     private GW2Inventory curInventory = null;
+    private List<ItemInfoController> itemFXMLControllers;
 
     /**
      * Initializes the controller class.
@@ -72,14 +85,15 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MainControllerWrapper.getInstance(this);
+        itemFXMLControllers = new ArrayList<>();
         try {
             api = new GW2Api();
             LogMngr.logInfo("GW2 Api loaded.");
         } catch (ClientProtocolException ex) {
             LogMngr.logError("Unable to load GW2Api.", ex);
         }
-        if (GWTSettings.getSetting("API.ApiKey") != "" && GWTSettings.getSetting("API.ApiKey") != null) {
-            api.setApiKey(GWTSettings.getSetting("API.ApiKey"));
+        if (GWTSettings.getSetting("API.ApiKey") != "" && GWTSettings.getSetting("API.api_key") != null) {
+            api.setApiKey(GWTSettings.getSetting("API.api_key"));
         } else {
             LogMngr.logWarning("No ApiKey specified!");
         }
@@ -91,6 +105,13 @@ public class MainController implements Initializable {
         } finally {
             characterComboBox.getItems().addAll(characters);
         }
+        loglevelCombobox.getItems().addAll("INFO", "WARNING", "SEVERE");
+        loglevelCombobox.getSelectionModel().select(GWTSettings.getSetting("LOGGING.loglevel"));
+
+        Integer initialRefreshRate = Integer.decode(GWTSettings.getSetting("TRADING.refresh_rate"));
+        Integer stepSize = Integer.decode(GWTSettings.getSetting("TRADING.refresh_step_size"));
+        IntegerSpinnerValueFactory refreshRateValueFactory = new IntegerSpinnerValueFactory(1000, 300000, initialRefreshRate, stepSize);
+        refreshRateSpinner.setValueFactory(refreshRateValueFactory);
     }
 
     public void initAfter() {
@@ -112,25 +133,34 @@ public class MainController implements Initializable {
 
     public void handleCharacterCombobox(ActionEvent event) {
         LogMngr.logInfo("Selected Character: ".concat(characterComboBox.getValue()));
+        itemsVBox.getChildren().clear();
         inventoryLoaded = false;
     }
 
     public void handleRefreshInventoryButton(ActionEvent event) {
-        if (inventoryLoaded) {
-            try {
-                clearInventoryFXML();
-                loadCharacterInventory();            
-                inventoryLoaded = false;
-            } catch (URISyntaxException | IOException ex) {
-                LogMngr.logError("Error while reloading inventory.", ex);
-            }
-        } else {
+        if (!inventoryLoaded) {
             try {
                 loadCharacterInventory();
             } catch (URISyntaxException | IOException ex) {
                 LogMngr.logError("Error while loading inventory.", ex);
             }
         }
+    }
+    
+    public void handleLoglevelCombobox(ActionEvent event){
+        
+    }
+
+    public void handleSaveSettingsButton(ActionEvent event) {
+        GWTSettings.setSetting("API.api_key", apiKeyField.getText());
+        GWTSettings.setSetting("TRADING.refresh_rate", refreshRateSpinner.getValue().toString());
+        GWTSettings.setSetting("LOGGING.loglevel", loglevelCombobox.getValue());
+        GWTSettings.setSetting("LOGGING.logfile", logFileField.getText());
+
+    }
+
+    public void handleSelectLogFileButton(ActionEvent event) {
+
     }
 
     private void loadCharacterInventory() throws URISyntaxException, IOException {
@@ -154,7 +184,7 @@ public class MainController implements Initializable {
             curInventory.getAllItems().forEach((item) -> {
                 Platform.runLater(() -> {
                     try {
-                        loaditemFXML(item);
+                        itemFXMLControllers.add(loaditemFXML(item));
                     } catch (IOException | URISyntaxException ex2) {
                         LogMngr.logError("Error loading item FXML.", ex2);
                     }
@@ -166,9 +196,6 @@ public class MainController implements Initializable {
 
         });
         t.start();
-    }
-
-    public void clearInventoryFXML() {
-        itemsVBox.getChildren().clear();
+        inventoryPane.setText(characterComboBox.getValue());
     }
 }

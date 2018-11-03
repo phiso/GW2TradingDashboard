@@ -23,16 +23,15 @@ import javafx.stage.Stage;
  * @author Philipp
  */
 public class GW2TradeDashboard extends Application {
-
+    
     private FXMLLoader fxmlLoader;
     private MainController controller;
-
+    
     @Override
     public void start(Stage primaryStage) throws IOException {
         GWTSettings.getInstance(String.format("%s%sdata%sconf.ini", System.getProperty("user.dir"), File.separator, File.separator));
-        LogMngr.getinstance("GWTLogger",
-                String.format("%s%slog%slog.txt", System.getProperty("user.dir"), File.separator, File.separator),
-                Level.parse(GWTSettings.getSetting("LOGGING.Loglevel")));
+        LogMngr.getinstance("GWTLogger", System.getProperty("user.dir") + GWTSettings.getSetting("LOGGING.logfile"),
+                Level.parse(GWTSettings.getSetting("LOGGING.loglevel")));
         URL location = getClass().getResource("Main.fxml");
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
@@ -47,7 +46,7 @@ public class GW2TradeDashboard extends Application {
     }
     
     @Override
-    public void stop(){
+    public void stop() {
         Platform.exit();
     }
 
@@ -57,5 +56,5 @@ public class GW2TradeDashboard extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
 }

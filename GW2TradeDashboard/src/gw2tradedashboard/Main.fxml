@@ -36,7 +36,7 @@
                               </AnchorPane>
                           </content>
                         </TitledPane>
-                        <Button fx:id="refreshIventoryButton" layoutX="363.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleRefreshInventoryButton" prefHeight="25.0" prefWidth="64.0" text="Refresh" />
+                        <Button fx:id="refreshIventoryButton" layoutX="363.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleRefreshInventoryButton" prefHeight="25.0" prefWidth="126.0" text="Load Inventory" />
                         <ProgressIndicator fx:id="progressIndicator" layoutX="909.0" layoutY="15.0" prefHeight="42.0" prefWidth="42.0" visible="false" />
                      </children>
                   </AnchorPane>
@@ -52,13 +52,15 @@
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="14.0" layoutY="14.0" text="Api Key" />
-                        <TextField layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="626.0" />
-                        <Spinner editable="true" layoutX="12.0" layoutY="84.0" prefHeight="25.0" prefWidth="115.0" />
+                        <TextField fx:id="apiKeyField" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="626.0" />
+                        <Spinner fx:id="refreshRateSpinner" editable="true" layoutX="12.0" layoutY="84.0" prefHeight="25.0" prefWidth="115.0" />
                         <Label layoutX="12.0" layoutY="67.0" text="Refresh rate (ms)" />
                         <Label layoutX="14.0" layoutY="121.0" text="Logfile location" />
-                        <TextField layoutX="12.0" layoutY="139.0" prefHeight="25.0" prefWidth="256.0" />
-                        <Button layoutX="270.0" layoutY="139.0" mnemonicParsing="false" text="..." />
-                        <Button layoutX="12.0" layoutY="195.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="64.0" text="Save" />
+                        <TextField fx:id="logFileField" layoutX="12.0" layoutY="139.0" prefHeight="25.0" prefWidth="256.0" />
+                        <Button fx:id="selectLogFileButton" layoutX="270.0" layoutY="139.0" mnemonicParsing="false" onAction="#handleSelectLogFileButton" text="..." />
+                        <Button fx:id="saveSettingsButton" layoutX="12.0" layoutY="195.0" mnemonicParsing="false" onAction="#handleSaveSettingsButton" prefHeight="25.0" prefWidth="64.0" text="Save" />
+                        <ComboBox fx:id="loglevelCombobox" layoutX="314.0" layoutY="139.0" onAction="#handleLoglevelCombobox" prefHeight="25.0" prefWidth="129.0" visibleRowCount="5" />
+                        <Label layoutX="313.0" layoutY="121.0" text="Loglevel" />
                      </children>
                   </AnchorPane>
                </content>

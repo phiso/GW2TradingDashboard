@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\Philipp\Documents\Repositories\GW2TradingDashboard\GW2TradeDashboard\dist\GW2TradeDashboard.jar</jar>
-  <outfile>C:\Users\Philipp\Documents\Repositories\GW2TradingDashboard\GW2TradeDashboard\Release\ver0.1.exe</outfile>
+  <outfile>C:\Users\Philipp\Documents\Repositories\GW2TradingDashboard\GW2TradeDashboard\Release\GWTD.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
