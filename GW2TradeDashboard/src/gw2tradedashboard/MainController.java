@@ -97,7 +97,7 @@ public class MainController implements Initializable {
 
     }
 
-    public void loaditemFXML(GW2InventoryItem item) throws IOException, URISyntaxException {
+    public ItemInfoController loaditemFXML(GW2InventoryItem item) throws IOException, URISyntaxException {
         URL location = getClass().getResource("ItemInfo.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
@@ -107,6 +107,7 @@ public class MainController implements Initializable {
         controller.setItem(item);
         itemsVBox.getChildren().add(root);
         itemsVBox.getChildren().add(new Separator(Orientation.HORIZONTAL));
+        return controller;
     }
 
     public void handleCharacterCombobox(ActionEvent event) {
@@ -115,29 +116,59 @@ public class MainController implements Initializable {
     }
 
     public void handleRefreshInventoryButton(ActionEvent event) {
-        progressIndicator.setVisible(true);
         if (inventoryLoaded) {
+            try {
+                clearInventoryFXML();
+                loadCharacterInventory();            
+                inventoryLoaded = false;
+            } catch (URISyntaxException | IOException ex) {
+                LogMngr.logError("Error while reloading inventory.", ex);
+            }
         } else {
-            Thread t = new Thread(() -> {
-                try {
-                    loadCharacterInventory();
-                } catch (URISyntaxException | IOException ex) {
-                    LogMngr.logError("Failed loading Character Inventory for: ".concat(characterComboBox.getValue()), ex);
-                }
-                LogMngr.logInfo("Loaded " + curInventory.getItemCount() + " items in Inventory.");
-                Platform.runLater(() -> {
-                    progressIndicator.setVisible(false);
-                });               
-            });            
-            t.start();            
+            try {
+                loadCharacterInventory();
+            } catch (URISyntaxException | IOException ex) {
+                LogMngr.logError("Error while loading inventory.", ex);
+            }
         }
     }
 
     private void loadCharacterInventory() throws URISyntaxException, IOException {
-        String character = characterComboBox.getValue();
-        JsonObject jInventory = api.getCharacterInventory(character);
-        GW2Inventory inventory = new GW2Inventory(jInventory);
-        curInventory = inventory;
-        inventoryLoaded = true;
+        progressIndicator.setVisible(true);
+        Thread t = new Thread(() -> {
+            try {
+                String character = characterComboBox.getValue();
+                JsonObject jInventory = api.getCharacterInventory(character);
+                GW2Inventory inventory = new GW2Inventory(jInventory);
+                for (GW2InventoryItem thisItem : inventory.getAllItems()) {
+                    Integer id = thisItem.getId();
+                    thisItem.setCorrItem(api.getItem(id));
+                }
+                curInventory = inventory;
+                inventoryLoaded = true;
+            } catch (URISyntaxException | IOException ex) {
+                LogMngr.logError("Failed loading Character Inventory for: ".concat(characterComboBox.getValue()), ex);
+            }
+            LogMngr.logInfo("Loaded " + curInventory.getItemCount() + " items in Inventory.");
+
+            curInventory.getAllItems().forEach((item) -> {
+                Platform.runLater(() -> {
+                    try {
+                        loaditemFXML(item);
+                    } catch (IOException | URISyntaxException ex2) {
+                        LogMngr.logError("Error loading item FXML.", ex2);
+                    }
+                });
+            });
+            Platform.runLater(() -> {
+                progressIndicator.setVisible(false);
+            });
+
+        });
+        t.start();
+    }
+
+    public void clearInventoryFXML() {
+        itemsVBox.getChildren().clear();
     }
 }

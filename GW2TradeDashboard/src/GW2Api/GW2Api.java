@@ -106,8 +106,8 @@ public class GW2Api {
         return apiRequest("/v2/commerce/prices/".concat(itemId), true).getAsJsonObject();
     }
 
-    public JsonObject getItem(String itemId) throws URISyntaxException, IOException {
-        return apiRequest("/v2/items/".concat(itemId), false).getAsJsonObject();
+    public JsonObject getItem(Integer itemId) throws URISyntaxException, IOException {
+        return apiRequest("/v2/items/".concat(Integer.toString(itemId)), false).getAsJsonObject();
     }
 
     public JsonArray getAllItemIds() throws URISyntaxException, IOException {

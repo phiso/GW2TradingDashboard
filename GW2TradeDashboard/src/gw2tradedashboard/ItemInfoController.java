@@ -6,6 +6,7 @@
 package gw2tradedashboard;
 
 import GW2Api.GW2Objects.GW2InventoryItem;
+import GW2Api.GW2Objects.GW2Item;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -61,7 +62,8 @@ public class ItemInfoController implements Initializable {
     @FXML
     private Button diagramButton;
     
-    private GW2InventoryItem item;
+    private GW2InventoryItem invItem;
+    private GW2Item item;
 
     /**
      * Initializes the controller class.
@@ -101,12 +103,28 @@ public class ItemInfoController implements Initializable {
        
     }
     
-    public void setItem(GW2InventoryItem item) throws URISyntaxException, IOException {
-       
+    public void setItem(GW2InventoryItem item) {
+       this.invItem = item;
+       this.item = item.getItem();
+       itemNameLabel.setText(this.item.getName());
+       String binding = "";
+       if (!invItem.getBinding().equals("")){
+           binding += invItem.getBinding()+" bound";
+           if (!invItem.getBoundTo().equals("")){
+               binding += " to " + invItem.getBoundTo();
+           }
+       }
+       itemInfoLabel.setText(this.item.getType() + ", " + this.item.getRarity() + ", " + binding);
+       itemImage.setImage(new Image(this.item.getIconUrl()));
+       chargesLabel.setText(invItem.getCharges().toString());
+       countLabel.setText(invItem.getCount().toString());
     }
     
     public void handleDiagramButton(ActionEvent event) {
         
     }
     
+    public void startTradeListener(){
+        
+    }    
 }

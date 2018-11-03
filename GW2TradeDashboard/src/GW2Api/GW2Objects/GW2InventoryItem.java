@@ -7,8 +7,11 @@ package GW2Api.GW2Objects;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.client.ClientProtocolException;
 
 /**
  *
@@ -24,6 +27,7 @@ public class GW2InventoryItem {
     private Integer skin;
     private List<Integer> upgrades;
     private JsonObject srcObject;
+    private GW2Item correspondingItem;
 
     public GW2InventoryItem(JsonObject srcObject) {
         this.srcObject = srcObject;
@@ -31,7 +35,7 @@ public class GW2InventoryItem {
         boundTo = "";
         if (srcObject != null){
             parseJson();
-        }
+        }        
     }
 
     private void parseJson() {
@@ -82,5 +86,11 @@ public class GW2InventoryItem {
         return srcObject;
     }
     
+    public void setCorrItem(JsonObject obj) throws IOException, ClientProtocolException, URISyntaxException{
+        this.correspondingItem = new GW2Item(obj);
+    }
     
+    public GW2Item getItem(){
+        return correspondingItem;
+    }
 }
