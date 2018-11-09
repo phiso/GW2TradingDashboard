@@ -11,6 +11,7 @@ import GW2Api.GW2Objects.GW2Inventory;
 import GW2Api.GW2Objects.GW2InventoryItem;
 import GW2Api.GsonUtils;
 import com.google.gson.JsonObject;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,6 +41,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.apache.http.client.ClientProtocolException;
 
 /**
@@ -146,9 +148,9 @@ public class MainController implements Initializable {
             }
         }
     }
-    
-    public void handleLoglevelCombobox(ActionEvent event){
-        
+
+    public void handleLoglevelCombobox(ActionEvent event) {
+        //passively read on save
     }
 
     public void handleSaveSettingsButton(ActionEvent event) {
@@ -156,11 +158,20 @@ public class MainController implements Initializable {
         GWTSettings.setSetting("TRADING.refresh_rate", refreshRateSpinner.getValue().toString());
         GWTSettings.setSetting("LOGGING.loglevel", loglevelCombobox.getValue());
         GWTSettings.setSetting("LOGGING.logfile", logFileField.getText());
-
     }
 
     public void handleSelectLogFileButton(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save Logfile...");
+        fc.setInitialFileName("GWTD.log");
+        fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File logFile = fc.showSaveDialog(null);
 
+        if (logFile != null) {
+            logFileField.setText(logFile.getAbsolutePath());
+        } else {
+            LogMngr.logWarning("No Logfile selected!");
+        }
     }
 
     private void loadCharacterInventory() throws URISyntaxException, IOException {

@@ -102,7 +102,7 @@ public class GW2Api {
         return httpClient.execute(httpGet, apiResponse);
     }
 
-    public JsonObject getPrice(String itemId) throws URISyntaxException, IOException {
+    public JsonObject getTradeitem(String itemId) throws URISyntaxException, IOException {
         return apiRequest("/v2/commerce/prices/".concat(itemId), true).getAsJsonObject();
     }
 
