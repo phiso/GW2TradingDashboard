@@ -7,10 +7,14 @@ package gw2tradedashboard;
 
 import GW2Api.GW2Objects.GW2InventoryItem;
 import GW2Api.GW2Objects.GW2Item;
+import GW2Api.GW2Objects.GW2Price;
+import GW2Api.Threads.GW2ItemPriceListener;
+import GW2Api.Threads.GW2ThreadMngr;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -96,7 +100,25 @@ public class ItemInfoController implements Initializable {
     }
     
     public void hanleMonitorCheckBox(ActionEvent event) {
-      
+        Integer itemId = invItem.getId();
+        GW2ItemPriceListener listener = null;
+        if (monitorCheckBox.isSelected()){
+             listener = GW2ThreadMngr.addOrResumeListener(itemId);             
+             listener.getBuyPriceProperty().addListener((observable, oldValue, newValue) -> {
+                 Platform.runLater(() -> {
+                     GW2Price price = new GW2Price((Integer) newValue);
+                     buyCostLabel.setText(price.toString());
+                 });
+             });
+             listener.getSellpriceProperty().addListener((observable, oldValue, newValue) -> {
+                 Platform.runLater(() -> {
+                     GW2Price price = new GW2Price((Integer) newValue);
+                     sellValueLabel.setText(price.toString());
+                 });
+             });
+        } else {
+            GW2ThreadMngr.stopListening(itemId);
+        }
     }
     
     public void handleOverlayPaneClick(MouseEvent event) {

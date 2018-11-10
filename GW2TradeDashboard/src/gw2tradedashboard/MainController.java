@@ -10,6 +10,7 @@ import GW2Api.GW2Api;
 import GW2Api.GW2Objects.GW2Inventory;
 import GW2Api.GW2Objects.GW2InventoryItem;
 import GW2Api.GsonUtils;
+import GW2Api.Threads.GW2ThreadMngr;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
@@ -114,6 +115,7 @@ public class MainController implements Initializable {
         Integer stepSize = Integer.decode(GWTSettings.getSetting("TRADING.refresh_step_size"));
         IntegerSpinnerValueFactory refreshRateValueFactory = new IntegerSpinnerValueFactory(1000, 300000, initialRefreshRate, stepSize);
         refreshRateSpinner.setValueFactory(refreshRateValueFactory);
+        GW2ThreadMngr.getInstance();
     }
 
     public void initAfter() {

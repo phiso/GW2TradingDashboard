@@ -6,6 +6,7 @@
 package gw2tradedashboard;
 
 import GW2Api.LogMngr;
+import GW2Api.Threads.GW2ThreadMngr;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +48,9 @@ public class GW2TradeDashboard extends Application {
     
     @Override
     public void stop() {
+        LogMngr.log(Level.FINE, "Stopping Application");
+        GW2ThreadMngr.killAllListeners();
+        LogMngr.logConfig("Killed all existing Price-listeners.");
         Platform.exit();
     }
 

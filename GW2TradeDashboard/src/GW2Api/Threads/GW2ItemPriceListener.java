@@ -117,4 +117,8 @@ public class GW2ItemPriceListener extends Thread {
         alive = false;
         running = false;
     }
+    
+    public void setDelay(Integer delay){
+        this.delay = delay;
+    }
 }

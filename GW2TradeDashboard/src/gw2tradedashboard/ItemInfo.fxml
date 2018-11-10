@@ -24,7 +24,7 @@
       <Label layoutX="582.0" layoutY="43.0" text="Profit" />
       <Label fx:id="profitLabel" layoutX="627.0" layoutY="43.0" text="000G 00S 00C" />
       <Separator layoutX="353.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
-      <Pane fx:id="overlayPane" blendMode="OVERLAY" layoutX="5.0" layoutY="2.0" onMouseClicked="#handleOverlayPaneClick" prefHeight="64.0" prefWidth="715.0" />
+      <Pane fx:id="overlayPane" blendMode="OVERLAY" layoutX="1.0" layoutY="2.0" onMouseClicked="#handleOverlayPaneClick" prefHeight="64.0" prefWidth="715.0" />
       <Label fx:id="chargesLabel" layoutX="87.0" layoutY="50.0" text="00" />
       <Separator layoutX="577.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
       <CheckBox fx:id="monitorCheckBox" alignment="CENTER" blendMode="MULTIPLY" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="331.0" layoutY="6.0" mnemonicParsing="false" onAction="#hanleMonitorCheckBox" />

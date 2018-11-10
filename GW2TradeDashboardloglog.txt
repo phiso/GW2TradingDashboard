@@ -1,6 +1,10 @@
-Nov 03, 2018 9:08:53 PM GW2Api.LogMngr <init>
+Nov 09, 2018 11:47:26 PM GW2Api.LogMngr <init>
 INFORMATION: Logger initialized
-Nov 03, 2018 9:08:53 PM GW2Api.LogMngr logAware
+Nov 09, 2018 11:47:26 PM GW2Api.LogMngr logAware
 INFORMATION: GW2 Api loaded.
-Nov 03, 2018 9:08:54 PM GW2Api.LogMngr logAware
+Nov 09, 2018 11:47:27 PM GW2Api.LogMngr logAware
 INFORMATION: UI Loaded
+Nov 09, 2018 11:47:30 PM GW2Api.LogMngr logAware
+INFORMATION: Selected Character: Salma Wyrn
+Nov 09, 2018 11:47:37 PM GW2Api.LogMngr logAware
+INFORMATION: Loaded 38 items in Inventory.

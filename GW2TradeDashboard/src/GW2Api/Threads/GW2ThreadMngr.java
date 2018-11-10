@@ -29,13 +29,54 @@ public class GW2ThreadMngr {
         return GW2ThreadMngr.instance;
     }
     
-    public static GW2ItemPriceListener getThread(Integer itemId){
+    public static GW2ItemPriceListener getListener(Integer itemId){
         return threadList.get(itemId);
     }
     
-    public static void addListenerOnItem(Integer itemId){
+    public static GW2ItemPriceListener addListenerOnItem(Integer itemId){
         GW2ItemPriceListener newListener = new GW2ItemPriceListener(itemId, Integer.parseInt(GWTSettings.getSetting("TRADING.refresh_rate")));
         threadList.put(itemId, newListener);
         newListener.start();
+        return newListener;
+    }
+    
+    public static GW2ItemPriceListener addOrResumeListener(Integer itemId){
+        GW2ItemPriceListener listener = threadList.getOrDefault(itemId, null);
+        if (listener == null){
+           listener = addListenerOnItem(itemId);
+        } else {
+            listener.resumeExecution();
+        }
+        return listener;
+    }
+    
+    public static void stopListening(Integer itemId){
+        GW2ItemPriceListener listener = threadList.getOrDefault(itemId, null);
+        if (listener != null){
+            listener.stopExecution();
+        }
+    }
+    
+    public static void killListener(Integer itemId){
+        GW2ItemPriceListener listener = threadList.getOrDefault(itemId, null);
+        if (listener != null){
+            listener.kill();
+        }
+    }
+    
+    public static void changeDelay(Integer delay){
+        threadList.keySet().forEach((it) -> {
+            threadList.get(it).setDelay(delay);
+        });
+    }
+    
+    public static void changeDelay(Integer itemId, Integer delay){
+        threadList.get(itemId).setDelay(delay);
+    }
+    
+    public static void killAllListeners(){
+        threadList.keySet().forEach((it) -> {
+            threadList.get(it).kill();
+        });
     }
 }

@@ -25,6 +25,16 @@ public class GW2TradeItem {
         this.srcObject = srcObject;
         parseJson();
     }
+    
+    public GW2TradeItem(Integer item, Integer buyPrice, Integer sellPrice, Integer buyQuantity, Integer sellQuantity){
+        this.itemId = item;
+        this.buyPrice = new GW2Price(buyPrice);
+        this.sellPrice = new GW2Price(sellPrice);
+        this.buyQuantity = buyQuantity;
+        this.sellQuantity = sellQuantity;
+        srcObject = null;
+        whitelisted = false;
+    }
 
     private void parseJson() {
         itemId = srcObject.get("id").getAsInt();
