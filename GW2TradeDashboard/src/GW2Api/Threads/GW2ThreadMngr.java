@@ -6,6 +6,8 @@
 package GW2Api.Threads;
 
 import gw2tradedashboard.GWTSettings;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +35,14 @@ public class GW2ThreadMngr {
         return threadList.get(itemId);
     }
     
-    public static GW2ItemPriceListener addListenerOnItem(Integer itemId){
+    public static GW2ItemPriceListener addListenerOnItem(Integer itemId) throws URISyntaxException, IOException{
         GW2ItemPriceListener newListener = new GW2ItemPriceListener(itemId, Integer.parseInt(GWTSettings.getSetting("TRADING.refresh_rate")));
         threadList.put(itemId, newListener);
         newListener.start();
         return newListener;
     }
     
-    public static GW2ItemPriceListener addOrResumeListener(Integer itemId){
+    public static GW2ItemPriceListener addOrResumeListener(Integer itemId) throws URISyntaxException, IOException{
         GW2ItemPriceListener listener = threadList.getOrDefault(itemId, null);
         if (listener == null){
            listener = addListenerOnItem(itemId);

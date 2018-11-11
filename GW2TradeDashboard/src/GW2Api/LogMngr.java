@@ -107,4 +107,8 @@ public class LogMngr {
     public static void logConfig(String msg, Throwable thrown){
         logAware(Level.CONFIG, msg, thrown);
     }
+    
+    public static Logger getLogger(){
+        return logger;
+    }
 }

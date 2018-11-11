@@ -1,0 +1,12 @@
+Nov 11, 2018 4:56:00 AM GW2Api.LogMngr <init>
+INFORMATION: Logger initialized
+Nov 11, 2018 4:56:00 AM GW2Api.GW2Sql <init>
+INFORMATION: Database connection is valid.
+Nov 11, 2018 4:56:00 AM gw2tradedashboard.GW2TradeDashboard start
+INFORMATION: Established connection to Database, Schema: null
+Nov 11, 2018 4:56:00 AM GW2Api.LogMngr logAware
+INFORMATION: GW2 Api loaded.
+Nov 11, 2018 4:56:00 AM GW2Api.GW2Api apiRequest
+INFORMATION: Performing request on https://api.guildwars2.com/v2/characters?access_token=CCF07BF5-54B0-834F-857B-18903DB66C700F080C98-D91B-4B71-A836-4086CD6FADCC
+Nov 11, 2018 4:56:01 AM GW2Api.LogMngr logAware
+INFORMATION: UI Loaded

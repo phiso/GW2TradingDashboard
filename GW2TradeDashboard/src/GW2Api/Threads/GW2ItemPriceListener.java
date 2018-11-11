@@ -11,6 +11,7 @@ import GW2Api.LogMngr;
 import com.google.gson.JsonObject;
 import gw2tradedashboard.GWTSettings;
 import java.io.IOException;
+import java.io.NotActiveException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +35,25 @@ public class GW2ItemPriceListener extends Thread {
     private Boolean alive;
     private Boolean running;
     
-    public GW2ItemPriceListener(Integer itemId, Integer delay) {
+    private GW2Api api = null;
+
+    /**
+     *
+     * @param itemId
+     * @param delay
+     * @throws ClientProtocolException
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws NotActiveException
+     */
+    public GW2ItemPriceListener(Integer itemId, Integer delay) throws ClientProtocolException, URISyntaxException, IOException, NotActiveException {
         super(itemId.toString());
+        api = new GW2Api(GWTSettings.getSetting("API.api_key"));
+        Boolean isSelling = api.itemSelling(itemId);
+        if (!isSelling) {
+            LogMngr.logWarning("Item " + itemId + " is not listed on Tradingpost!");
+            throw new NotActiveException("Items with this ID are not listed.");
+        }
         this.itemId = itemId;
         this.delay = delay;
         alive = true;
@@ -49,12 +67,6 @@ public class GW2ItemPriceListener extends Thread {
     
     @Override
     public void run() {
-        GW2Api api = null;
-        try {
-            api = new GW2Api(GWTSettings.getSetting("API.api_key"));
-        } catch (ClientProtocolException ex) {
-            LogMngr.logWarning("Error loading API!", ex);            
-        }
         while (true) {
             while (alive && running && api != null) {
                 LogMngr.log(Level.FINEST, "Refreshing prices on Item " + itemId);
@@ -69,6 +81,11 @@ public class GW2ItemPriceListener extends Thread {
                 } catch (URISyntaxException | IOException ex) {
                     LogMngr.logError("Error getting Tradeitem for ID: " + itemId, ex);
                 }
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException ex) {
+                    LogMngr.logError("Error pausing Thread on item " + itemId.toString(), ex);
+                }
             }
             if (!alive) {
                 Thread.currentThread().interrupt();
@@ -77,11 +94,7 @@ public class GW2ItemPriceListener extends Thread {
                 LogMngr.logError("Thread stopped due to missing API!");
                 return;
             }
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException ex) {
-                LogMngr.logError("Error pausing Thread on item " + itemId.toString(), ex);
-            }
+            
         }
     }
     
@@ -118,7 +131,7 @@ public class GW2ItemPriceListener extends Thread {
         running = false;
     }
     
-    public void setDelay(Integer delay){
+    public void setDelay(Integer delay) {
         this.delay = delay;
     }
 }

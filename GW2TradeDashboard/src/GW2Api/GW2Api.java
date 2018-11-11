@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -54,6 +55,7 @@ public class GW2Api {
             StatusLine statusLine = hr.getStatusLine();
             HttpEntity entity = hr.getEntity();
             if (statusLine.getStatusCode() >= 300) { // Http Error Codes
+                LogMngr.getLogger().log(Level.SEVERE, "Error Http Statuscode " + statusLine.getStatusCode());
                 throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
             }
             if (entity == null) { // Response without Content
@@ -99,6 +101,7 @@ public class GW2Api {
 
     public JsonElement apiRequest(String path, Boolean auth) throws URISyntaxException, IOException {
         HttpGet httpGet = buildURI(path, auth);
+        LogMngr.getLogger().log(Level.INFO, "Performing request on {0}", httpGet.getURI());
         return httpClient.execute(httpGet, apiResponse);
     }
 
@@ -145,6 +148,15 @@ public class GW2Api {
 
     public JsonObject getAccountInventory() throws URISyntaxException, IOException {
         return apiRequest("/v2/account/inventory", true).getAsJsonObject();
+    }
+
+    public Boolean itemSelling(Integer itemId) throws URISyntaxException, IOException {
+        try {
+            JsonElement obj = apiRequest("/v2/commerce/prices/".concat(itemId.toString()), false);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }        
     }
 
     public void setApiKey(String key) {

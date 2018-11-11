@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" prefHeight="64.0" prefWidth="715.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gw2tradedashboard.ItemInfoController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="310.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gw2tradedashboard.ItemInfoController">
    <children>
-      <ImageView fx:id="itemImage" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
-      <Separator layoutX="61.0" orientation="VERTICAL" prefHeight="64.0" />
-      <Label fx:id="itemNameLabel" layoutX="71.0" layoutY="5.0" prefHeight="17.0" prefWidth="240.0" text="Item Name here" />
-      <Label fx:id="countLabel" layoutX="64.0" layoutY="50.0" text="00" />
-      <Label fx:id="itemInfoLabel" layoutX="71.0" layoutY="25.0" prefHeight="17.0" prefWidth="255.0" text="Additional Information" />
-      <Label layoutX="582.0" layoutY="7.0" text="Buying" />
-      <Label fx:id="buyCostLabel" layoutX="627.0" layoutY="7.0" text="000G 00S 00C" />
-      <Label layoutX="582.0" layoutY="25.0" text="Selling" />
-      <Label fx:id="sellValueLabel" layoutX="627.0" layoutY="25.0" text="000G 00S 00C" />
-      <Label layoutX="582.0" layoutY="43.0" text="Profit" />
-      <Label fx:id="profitLabel" layoutX="627.0" layoutY="43.0" text="000G 00S 00C" />
-      <Separator layoutX="353.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
-      <Pane fx:id="overlayPane" blendMode="OVERLAY" layoutX="1.0" layoutY="2.0" onMouseClicked="#handleOverlayPaneClick" prefHeight="64.0" prefWidth="715.0" />
-      <Label fx:id="chargesLabel" layoutX="87.0" layoutY="50.0" text="00" />
-      <Separator layoutX="577.0" layoutY="2.0" orientation="VERTICAL" prefHeight="64.0" />
-      <CheckBox fx:id="monitorCheckBox" alignment="CENTER" blendMode="MULTIPLY" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="331.0" layoutY="6.0" mnemonicParsing="false" onAction="#hanleMonitorCheckBox" />
-      <Spinner fx:id="goldSpinner" editable="true" layoutX="364.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
-      <Spinner fx:id="silverSpinner" editable="true" layoutX="437.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
-      <Spinner fx:id="copperSpinner" editable="true" layoutX="512.0" layoutY="35.0" prefHeight="25.0" prefWidth="64.0" />
-      <Spinner fx:id="amountSpinner" editable="true" layoutX="512.0" layoutY="4.0" prefHeight="25.0" prefWidth="64.0" />
-      <Label layoutX="468.0" layoutY="8.0" text="Amount" />
-      <Label layoutX="504.0" layoutY="39.0" text="C" />
-      <Label layoutX="430.0" layoutY="39.0" text="S" />
-      <Label layoutX="355.0" layoutY="39.0" text="G" />
-      <Button fx:id="diagramButton" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="300.0" layoutY="48.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDiagramButton" prefHeight="17.0" prefWidth="52.0" text="Diagram" textAlignment="CENTER">
-         <font>
-            <Font name="Arial" size="9.0" />
-         </font>
-      </Button>
+      <ImageView fx:id="itemImage" fitHeight="64.0" fitWidth="64.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0" />
+      <Separator fx:id="separator" layoutX="70.0" layoutY="2.0" maxWidth="-Infinity" minHeight="-Infinity" orientation="VERTICAL" prefHeight="300.0" prefWidth="6.0" />
+      <Label fx:id="itemNameLabel" layoutX="79.0" layoutY="3.0" prefHeight="17.0" prefWidth="249.0" text="Item Name here" />
+      <Label fx:id="countLabel" layoutX="3.0" layoutY="53.0" opacity="0.6" text="00" textFill="#adadad" />
+      <Label fx:id="itemInfoLabel" layoutX="79.0" layoutY="19.0" prefHeight="17.0" prefWidth="278.0" text="Additional Information" />
+      <Label layoutX="410.0" layoutY="3.0" text="Buying" />
+      <Label fx:id="buyCostLabel" layoutX="452.0" layoutY="3.0" text="000G 00S 00C" />
+      <Label layoutX="410.0" layoutY="18.0" text="Selling" />
+      <Label fx:id="sellValueLabel" layoutX="452.0" layoutY="18.0" text="000G 00S 00C" />
+      <Label fx:id="chargesLabel" layoutX="53.0" layoutY="53.0" opacity="0.6" text="00" textFill="#adadad" />
+      <TitledPane fx:id="detailsPane" animated="false" blendMode="MULTIPLY" layoutX="79.0" layoutY="38.0" opacity="0.9" prefHeight="264.0" prefWidth="447.0" text="Detailed Information">
+         <content>
+            <TabPane fx:id="detailsTabPane" prefHeight="99.0" prefWidth="447.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab closable="false" text="Functions">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Diagrams">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <LineChart fx:id="itemLineChart" layoutX="-80.0" layoutY="-108.0" prefHeight="208.66666666666666" prefWidth="445.3333333333333" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </content>
+      </TitledPane>
+      <CheckBox fx:id="monitorCheckBox" layoutX="3.0" layoutY="3.0" mnemonicParsing="false" onAction="#hanleMonitorCheckBox" opacity="0.5" />
    </children>
 </AnchorPane>
